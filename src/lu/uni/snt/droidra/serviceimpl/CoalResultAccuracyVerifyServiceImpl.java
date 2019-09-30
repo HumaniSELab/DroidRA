@@ -60,9 +60,7 @@ public class CoalResultAccuracyVerifyServiceImpl implements CoalResultAccuracyVe
                         default:    //SIMPLE_STRING
                             break;
                     }
-
                 }
-
             });
 
             value.getClsSet().removeAll(oldSet);

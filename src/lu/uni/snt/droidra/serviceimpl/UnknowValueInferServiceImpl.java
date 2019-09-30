@@ -33,7 +33,7 @@ public class UnknowValueInferServiceImpl implements UnknowValueInferService {
             value.getClsSet().stream().forEach(clsDesc -> {
                 String clsName = clsDesc.cls;
 
-                if (null != clsName && StringUtils.equals(clsName, DroidRAConstant.STAR_SYMBOL)) {
+                if (null != clsName && (StringUtils.equals(clsName, DroidRAConstant.STAR_SYMBOL) || clsName.contains( DroidRAConstant.STAR_SYMBOL))) {
                     //use known field/method to guess className
                     //There is also no way to infer className for CLASS_NEW_INSTANCE/CONSTRUCTOR_CALL
                     switch (value.getType()) {
@@ -94,7 +94,7 @@ public class UnknowValueInferServiceImpl implements UnknowValueInferService {
             value.getClsSet().stream().forEach(clsDesc -> {
                 String name = clsDesc.name;
 
-                if (StringUtils.isNotBlank(name) && StringUtils.equals(name, DroidRAConstant.STAR_SYMBOL)) {
+                if (StringUtils.isNotBlank(name) && (StringUtils.equals(name, DroidRAConstant.STAR_SYMBOL)) || name.contains(DroidRAConstant.STAR_SYMBOL)) {
                     //use known className to guess field/method
                     //There is also no way to infer className for CLASS_NEW_INSTANCE/CONSTRUCTOR_CALL
                     switch (value.getType()) {

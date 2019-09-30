@@ -5,6 +5,8 @@ import lu.uni.snt.droidra.model.StmtType;
 import lu.uni.snt.droidra.model.StmtValue;
 import lu.uni.snt.droidra.service.CoalResultAccuracyVerifyService;
 import lu.uni.snt.droidra.service.UnknowValueInferService;
+import lu.uni.snt.droidra.serviceimpl.CoalResultAccuracyVerifyServiceImpl;
+import lu.uni.snt.droidra.serviceimpl.UnknowValueInferServiceImpl;
 import soot.Scene;
 import soot.SootClass;
 import soot.SootField;
@@ -23,6 +25,12 @@ public class HeuristicUnknownValueInfer {
     public static HeuristicUnknownValueInfer getInstance() {
         if (null == instance) {
             instance = new HeuristicUnknownValueInfer();
+        }
+        if(null == unknowValueInferService){
+            unknowValueInferService = new UnknowValueInferServiceImpl();
+        }
+        if(null == coalResultAccuracyVerifyService){
+            coalResultAccuracyVerifyService = new CoalResultAccuracyVerifyServiceImpl();
         }
         return instance;
     }
@@ -376,6 +384,5 @@ public class HeuristicUnknownValueInfer {
 
         return nameToClassMap;
     }
-
 
 }
