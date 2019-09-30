@@ -196,7 +196,7 @@ public class Main
 			
 			System.out.println("The following values were found:");
 		    for (Result result : DroidRAResultProcessor.results) 
-		    {å
+		    {
 		    	((DefaultResult) result).dump();
 		    }
 			
