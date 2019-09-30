@@ -117,7 +117,7 @@ public class Main
 		long afterRA = System.currentTimeMillis();
 		System.out.println("==>TIME:" + afterRA);
 		
-		booster();
+//		booster();
 		
 		long afterBooster = System.currentTimeMillis();
 		System.out.println("==>TIME:" + afterBooster);
