@@ -1,13 +1,16 @@
 package lu.uni.snt.droidra;
 
-import java.util.Map;
-import java.util.Set;
-
+import lu.uni.snt.droidra.model.ReflectionProfile.RClass;
 import lu.uni.snt.droidra.model.StmtKey;
 import lu.uni.snt.droidra.model.StmtValue;
 import lu.uni.snt.droidra.model.UniqStmt;
-import lu.uni.snt.droidra.model.ReflectionProfile.RClass;
 import lu.uni.snt.droidra.typeref.ArrayVarValue;
+import lu.uni.snt.droidra.typeref.soot.ClassMethodParamTypesKey;
+import lu.uni.snt.droidra.typeref.soot.ClassParamTypesKey;
+import lu.uni.snt.droidra.typeref.soot.NameParamTypesKey;
+
+import java.util.Map;
+import java.util.Set;
 
 public class GlobalRef 
 {
@@ -32,7 +35,10 @@ public class GlobalRef
 	public static Map<String, RClass> rClasses;
 	public static Map<UniqStmt, ArrayVarValue[]> arrayTypeRef;
 	public static Map<UniqStmt, StmtKey> keyPairs;
-	
-	
+
+	public static Map<ClassParamTypesKey, Set<String>> classParamTypesKeyMethodValueMap;
+	public static Map<NameParamTypesKey, Set<String>> nameParamTypesKeyClassValueMap;
+	public static Map<ClassMethodParamTypesKey, String> classMethodParamTypesKeyStringMap;
+
 	public static final String jsonFile = "refl.json";
 }

@@ -1,44 +1,17 @@
 package lu.uni.snt.droidra.retarget;
 
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import lu.uni.snt.droidra.booster.InstrumentationUtils;
-import soot.ArrayType;
-import soot.Body;
-import soot.IntType;
-import soot.Local;
-import soot.PatchingChain;
-import soot.RefType;
-import soot.Scene;
-import soot.SceneTransformer;
-import soot.SootClass;
-import soot.SootMethod;
-import soot.Type;
-import soot.Unit;
-import soot.Value;
-import soot.VoidType;
+import soot.*;
 import soot.javaToJimple.LocalGenerator;
-import soot.jimple.AssignStmt;
-import soot.jimple.IdentityStmt;
-import soot.jimple.IntConstant;
-import soot.jimple.InvokeExpr;
-import soot.jimple.Jimple;
-import soot.jimple.JimpleBody;
-import soot.jimple.ReturnStmt;
-import soot.jimple.ReturnVoidStmt;
-import soot.jimple.Stmt;
+import soot.jimple.*;
 import soot.jimple.infoflow.android.iccta.ICCDummyMainCreator;
 import soot.jimple.infoflow.android.manifest.ProcessManifest;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.util.Chain;
+
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 
 public class DummyMainGenerator extends SceneTransformer{
@@ -274,7 +247,7 @@ public class DummyMainGenerator extends SceneTransformer{
     		
     		SootClass sc = sm.getDeclaringClass();
     		List<SootMethod> methods = sc.getMethods();
-    		
+
     		SootMethod init = null;
     		SootMethod clinit = null;
     		

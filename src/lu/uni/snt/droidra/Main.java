@@ -1,13 +1,10 @@
 package lu.uni.snt.droidra;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Map;
 
+import com.google.gson.Gson;
+import edu.psu.cse.siis.coal.DefaultCommandLineArguments;
+import edu.psu.cse.siis.coal.DefaultCommandLineParser;
+import edu.psu.cse.siis.coal.DefaultResult;
+import edu.psu.cse.siis.coal.Result;
 import lu.uni.snt.droidra.booster.ApkBooster;
 import lu.uni.snt.droidra.model.ReflectionExchangable;
 import lu.uni.snt.droidra.model.ReflectionProfile;
@@ -15,13 +12,10 @@ import lu.uni.snt.droidra.model.StmtValue;
 import lu.uni.snt.droidra.model.UniqStmt;
 import lu.uni.snt.droidra.retarget.RetargetWithDummyMainGenerator;
 import lu.uni.snt.droidra.typeref.ArrayVarItemTypeRef;
+import lu.uni.snt.droidra.typeref.soot.SootStmtRef;
 
-import com.google.gson.Gson;
-
-import edu.psu.cse.siis.coal.DefaultCommandLineArguments;
-import edu.psu.cse.siis.coal.DefaultCommandLineParser;
-import edu.psu.cse.siis.coal.DefaultResult;
-import edu.psu.cse.siis.coal.Result;
+import java.io.*;
+import java.util.Map;
 
 /**
  * at soot.toDex.PrimitiveType.getByName(PrimitiveType.java:24)
@@ -162,7 +156,12 @@ public class Main
 		
 		ArrayVarItemTypeRef.setup(GlobalRef.apkPath, GlobalRef.clsPath);
 		GlobalRef.arrayTypeRef = ArrayVarItemTypeRef.arrayTypeRef;
-		
+
+		SootStmtRef.setup(GlobalRef.apkPath, GlobalRef.clsPath);
+		GlobalRef.classParamTypesKeyMethodValueMap = SootStmtRef.classParamTypesKeyMethodValueMap;
+		GlobalRef.nameParamTypesKeyClassValueMap = SootStmtRef.nameParamTypesKeyClassValueMap;
+		GlobalRef.classMethodParamTypesKeyStringMap = SootStmtRef.classMethodParamTypesKeyStringMap;
+
 		DroidRAAnalysis<DefaultCommandLineArguments> analysis = new DroidRAAnalysis<>();
 		DefaultCommandLineParser parser = new DefaultCommandLineParser();
 		DefaultCommandLineArguments commandLineArguments =
@@ -197,7 +196,7 @@ public class Main
 			
 			System.out.println("The following values were found:");
 		    for (Result result : DroidRAResultProcessor.results) 
-		    {
+		    {å
 		    	((DefaultResult) result).dump();
 		    }
 			
