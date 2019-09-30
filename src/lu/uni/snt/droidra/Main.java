@@ -111,7 +111,7 @@ public class Main
 		System.out.println("==>TIME:" + afterDummyMain);
 		
 		reflectionAnalysis();
-		toReadableText(apkName);
+		//toReadableText(apkName);
 		toJson();
 		
 		long afterRA = System.currentTimeMillis();
