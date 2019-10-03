@@ -7,6 +7,7 @@ import lu.uni.snt.droidra.model.StmtKey;
 import lu.uni.snt.droidra.model.StmtValue;
 import lu.uni.snt.droidra.service.CoalResultAccuracyVerifyService;
 import lu.uni.snt.droidra.typeref.soot.ClassMethodParamTypesKey;
+import lu.uni.snt.droidra.util.TypeConversionUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class CoalResultAccuracyVerifyServiceImpl implements CoalResultAccuracyVe
                             ClassMethodParamTypesKey classMethodParamTypesKey = new ClassMethodParamTypesKey();
                             classMethodParamTypesKey.cls = clsName;
                             classMethodParamTypesKey.method = name;
-                            classMethodParamTypesKey.paramTypes = key.getMethod().getParameterTypes();
+                            classMethodParamTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(key.getMethod().getParameterTypes());
 
                             String classMethodParamTypesKeyString = classMethodParamTypesKeyStringMap.get(classMethodParamTypesKey);
 

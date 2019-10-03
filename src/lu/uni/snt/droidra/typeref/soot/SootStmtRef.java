@@ -1,5 +1,6 @@
 package lu.uni.snt.droidra.typeref.soot;
 
+import lu.uni.snt.droidra.util.TypeConversionUtil;
 import soot.Body;
 import soot.BodyTransformer;
 import soot.PackManager;
@@ -31,6 +32,11 @@ public class SootStmtRef {
      * Convert all soot stmt to <ClassMethodParamTypesKey, String>, String refer to ClassMethodParamTypesKey.string
      */
     public static Map<ClassMethodParamTypesKey, String> classMethodParamTypesKeyStringMap = new HashMap<>();
+
+    /**
+     *  Convert all soot stmt to Map<ParamTypesKey, Set<ClassMethodValue>>
+     */
+    public static Map<ParamTypesKey, Set<ClassMethodValue>> paramTypesKeySetMap = new HashMap<>();
 
     public static void setup(String input, String clsPath){
         String[] args =
@@ -69,6 +75,7 @@ public class SootStmtRef {
                 convertToClassParamTypesKeyMethodValueMap(b);
                 convertToNameParamTypesKeyClassValueMap(b);
                 convertToClassMethodKeyParamTypesMap(b);
+                convertToParamTypesKeySetMap(b);
             }
 
         }));
@@ -81,7 +88,7 @@ public class SootStmtRef {
     private static void convertToClassParamTypesKeyMethodValueMap(Body b) {
         ClassParamTypesKey classParamTypesKey = new ClassParamTypesKey();
         classParamTypesKey.cls = b.getMethod().getDeclaringClass().getName();
-        classParamTypesKey.paramTypes = b.getMethod().getParameterTypes();
+        classParamTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(b.getMethod().getParameterTypes());
         String methodName = b.getMethod().getName();
 
         if (classParamTypesKeyMethodValueMap.containsKey(classParamTypesKey)) {
@@ -97,7 +104,7 @@ public class SootStmtRef {
     private static void convertToNameParamTypesKeyClassValueMap(Body b) {
         NameParamTypesKey nameParamTypesKey = new NameParamTypesKey();
         nameParamTypesKey.name = b.getMethod().getName();
-        nameParamTypesKey.paramTypes = b.getMethod().getParameterTypes();
+        nameParamTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(b.getMethod().getParameterTypes());
         String className = b.getClass().getName();
 
         if(nameParamTypesKeyClassValueMap.containsKey(nameParamTypesKey)){
@@ -114,9 +121,26 @@ public class SootStmtRef {
         ClassMethodParamTypesKey classMethodParamTypesKey = new ClassMethodParamTypesKey();
         classMethodParamTypesKey.cls = b.getClass().getName();
         classMethodParamTypesKey.method = b.getMethod().getName();
-        classMethodParamTypesKey.paramTypes = b.getMethod().getParameterTypes();
+        classMethodParamTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(b.getMethod().getParameterTypes());
 
         classMethodParamTypesKeyStringMap.put(classMethodParamTypesKey, classMethodParamTypesKey.toString());
+    }
+
+    private static void convertToParamTypesKeySetMap(Body b){
+        ParamTypesKey paramTypesKey = new ParamTypesKey();
+        paramTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(b.getMethod().getParameterTypes());
+        ClassMethodValue classMethodValue = new ClassMethodValue();
+        classMethodValue.cls = b.getClass().getName();
+        classMethodValue.method = b.getMethod().getName();
+
+        if(paramTypesKeySetMap.containsKey(paramTypesKey)){
+            Set<ClassMethodValue> classMethodValues = paramTypesKeySetMap.get(paramTypesKey);
+            classMethodValues.add(classMethodValue);
+        } else {
+            Set<ClassMethodValue> classMethodValues = new HashSet<>();
+            classMethodValues.add(classMethodValue);
+            paramTypesKeySetMap.put(paramTypesKey, classMethodValues);
+        }
     }
 
 

@@ -44,6 +44,8 @@ public class HeuristicUnknownValueInfer {
 
         stmtKeyValues = unknowValueInferService.inferMethodNameThroughAllSootClasses(stmtKeyValues);
 
+        stmtKeyValues = unknowValueInferService.inferClassMethodNameThroughAllSootMethods(stmtKeyValues);
+
         stmtKeyValues = coalResultAccuracyVerifyService.verifyCoalResult(stmtKeyValues);
 
         return stmtKeyValues;

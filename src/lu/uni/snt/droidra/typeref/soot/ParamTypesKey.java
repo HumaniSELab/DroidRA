@@ -3,16 +3,7 @@ package lu.uni.snt.droidra.typeref.soot;
 import com.google.common.base.Objects;
 import org.apache.commons.lang3.StringUtils;
 
-public class ClassMethodParamTypesKey {
-    /**
-     * refer to class name
-     */
-    public String cls;
-
-    /**
-     * refer to method name
-     */
-    public String method;
+public class ParamTypesKey {
 
     /**
      *Comma separated string
@@ -27,16 +18,10 @@ public class ClassMethodParamTypesKey {
         if (object == null) {
             return false;
         }
-        if (!(object instanceof ClassMethodParamTypesKey)) {
+        if (!(object instanceof ParamTypesKey)) {
             return false;
         }
-        ClassMethodParamTypesKey other = (ClassMethodParamTypesKey) object;
-        if (!StringUtils.equals(other.cls, cls)) {
-            return false;
-        }
-        if (!StringUtils.equals(other.method, method)) {
-            return false;
-        }
+        ParamTypesKey other = (ParamTypesKey) object;
         if (!StringUtils.equals(other.paramTypes, paramTypes)) {
             return false;
         }
@@ -45,6 +30,6 @@ public class ClassMethodParamTypesKey {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.cls, this.method, this.paramTypes);
+        return Objects.hashCode(this.paramTypes);
     }
 }

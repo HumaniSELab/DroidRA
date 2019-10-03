@@ -161,6 +161,7 @@ public class Main
 		GlobalRef.classParamTypesKeyMethodValueMap = SootStmtRef.classParamTypesKeyMethodValueMap;
 		GlobalRef.nameParamTypesKeyClassValueMap = SootStmtRef.nameParamTypesKeyClassValueMap;
 		GlobalRef.classMethodParamTypesKeyStringMap = SootStmtRef.classMethodParamTypesKeyStringMap;
+		GlobalRef.paramTypesKeySetMap = SootStmtRef.paramTypesKeySetMap;
 
 		DroidRAAnalysis<DefaultCommandLineArguments> analysis = new DroidRAAnalysis<>();
 		DefaultCommandLineParser parser = new DefaultCommandLineParser();
