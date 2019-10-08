@@ -5,7 +5,8 @@ import lu.uni.snt.droidra.model.StmtKey;
 import lu.uni.snt.droidra.model.StmtValue;
 import lu.uni.snt.droidra.model.UniqStmt;
 import lu.uni.snt.droidra.typeref.ArrayVarValue;
-import lu.uni.snt.droidra.typeref.soot.*;
+import lu.uni.snt.droidra.typeref.soot.fieldrelated.FieldTypesValue;
+import lu.uni.snt.droidra.typeref.soot.methodrelated.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -34,10 +35,18 @@ public class GlobalRef
 	public static Map<UniqStmt, ArrayVarValue[]> arrayTypeRef;
 	public static Map<UniqStmt, StmtKey> keyPairs;
 
+	/**
+	 * class-method-paramTypes maps
+	 */
 	public static Map<ClassParamTypesKey, Set<String>> classParamTypesKeyMethodValueMap;
 	public static Map<NameParamTypesKey, Set<String>> nameParamTypesKeyClassValueMap;
 	public static Map<ClassMethodParamTypesKey, String> classMethodParamTypesKeyStringMap;
 	public static Map<ParamTypesKey, Set<ClassMethodValue>> paramTypesKeySetMap;
+
+	/**
+	 * class-field-paramTypes maps
+	 */
+	public static Map<String, Set<FieldTypesValue>> classNameFieldTypesMap;
 
 	public static final String jsonFile = "refl.json";
 }

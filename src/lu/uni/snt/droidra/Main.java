@@ -109,7 +109,7 @@ public class Main
 		
 		long afterDummyMain = System.currentTimeMillis();
 		System.out.println("==>TIME:" + afterDummyMain);
-		
+
 		reflectionAnalysis();
 		//toReadableText(apkName);
 		toJson();
@@ -147,7 +147,6 @@ public class Main
 	
 	public static void reflectionAnalysis()
 	{
-		
 		String[] args = {
 			"-cp", GlobalRef.clsPath,
 			"-model", GlobalRef.coalModelPath,
@@ -162,6 +161,7 @@ public class Main
 		GlobalRef.nameParamTypesKeyClassValueMap = SootStmtRef.nameParamTypesKeyClassValueMap;
 		GlobalRef.classMethodParamTypesKeyStringMap = SootStmtRef.classMethodParamTypesKeyStringMap;
 		GlobalRef.paramTypesKeySetMap = SootStmtRef.paramTypesKeySetMap;
+		GlobalRef.classNameFieldTypesMap = SootStmtRef.classNameFieldTypesMap;
 
 		DroidRAAnalysis<DefaultCommandLineArguments> analysis = new DroidRAAnalysis<>();
 		DefaultCommandLineParser parser = new DefaultCommandLineParser();
@@ -172,7 +172,6 @@ public class Main
 			AndroidMethodReturnValueAnalyses.registerAndroidMethodReturnValueAnalyses("");
 			analysis.performAnalysis(commandLineArguments);
 		}
-		
 		GlobalRef.uniqStmtKeyValues = DroidRAResult.toUniqStmtKeyValues(HeuristicUnknownValueInfer.getInstance().infer(DroidRAResult.stmtKeyValues));
 		
 		ReflectionProfile.fillReflectionProfile(DroidRAResult.stmtKeyValues);

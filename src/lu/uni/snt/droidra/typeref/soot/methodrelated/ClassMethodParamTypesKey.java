@@ -1,16 +1,18 @@
-package lu.uni.snt.droidra.typeref.soot;
+package lu.uni.snt.droidra.typeref.soot.methodrelated;
 
 import com.google.common.base.Objects;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Created by sun on 2019/9/29.
- */
-public class NameParamTypesKey {
+public class ClassMethodParamTypesKey {
     /**
-     * refer to methodName/fieldName
+     * refer to class name
      */
-    public String name;
+    public String cls;
+
+    /**
+     * refer to method name
+     */
+    public String method;
 
     /**
      *Comma separated string
@@ -25,11 +27,14 @@ public class NameParamTypesKey {
         if (object == null) {
             return false;
         }
-        if (!(object instanceof NameParamTypesKey)) {
+        if (!(object instanceof ClassMethodParamTypesKey)) {
             return false;
         }
-        NameParamTypesKey other = (NameParamTypesKey) object;
-        if (!StringUtils.equals(other.name, name)) {
+        ClassMethodParamTypesKey other = (ClassMethodParamTypesKey) object;
+        if (!StringUtils.equals(other.cls, cls)) {
+            return false;
+        }
+        if (!StringUtils.equals(other.method, method)) {
             return false;
         }
         if (!StringUtils.equals(other.paramTypes, paramTypes)) {
@@ -40,6 +45,6 @@ public class NameParamTypesKey {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.name, this.paramTypes);
+        return Objects.hashCode(this.cls, this.method, this.paramTypes);
     }
 }

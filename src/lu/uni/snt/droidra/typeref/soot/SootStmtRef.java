@@ -1,16 +1,14 @@
 package lu.uni.snt.droidra.typeref.soot;
 
+import lu.uni.snt.droidra.typeref.soot.fieldrelated.FieldTypesValue;
+import lu.uni.snt.droidra.typeref.soot.methodrelated.*;
+import lu.uni.snt.droidra.util.ApplicationClassFilter;
 import lu.uni.snt.droidra.util.TypeConversionUtil;
-import soot.Body;
-import soot.BodyTransformer;
-import soot.PackManager;
-import soot.Transform;
+import soot.*;
 import soot.options.Options;
+import soot.util.Chain;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by sun on 2019/9/26.
@@ -34,9 +32,14 @@ public class SootStmtRef {
     public static Map<ClassMethodParamTypesKey, String> classMethodParamTypesKeyStringMap = new HashMap<>();
 
     /**
-     *  Convert all soot stmt to Map<ParamTypesKey, Set<ClassMethodValue>>
+     * Convert all soot stmt to Map<ParamTypesKey, Set<ClassMethodValue>>
      */
     public static Map<ParamTypesKey, Set<ClassMethodValue>> paramTypesKeySetMap = new HashMap<>();
+
+    /**
+     * Convert all soot stmt to Map<String, Set<FieldTypesValue>>, String refer to className
+     */
+    public static Map<String, Set<FieldTypesValue>> classNameFieldTypesMap = new HashMap<>();
 
     public static void setup(String input, String clsPath){
         String[] args =
@@ -66,23 +69,79 @@ public class SootStmtRef {
         Options.v().set_output_format(Options.output_format_none);
         //Options.v().set_output_format(Options.output_format_class);
 
-
-        PackManager.v().getPack("jtp").add(new Transform("jtp.SootStmtRef", new BodyTransformer() {
-
+        PackManager.v().getPack("wjtp").add(new Transform("wjtp.SootStmtMethodRef", new SceneTransformer() {
             @Override
-            protected void internalTransform(Body b, String phaseName, Map<String, String> options) {
+            protected void internalTransform(String s, Map<String, String> map) {
+                Chain<SootClass> applicationClasses = Scene.v().getApplicationClasses();
 
-                convertToClassParamTypesKeyMethodValueMap(b);
-                convertToNameParamTypesKeyClassValueMap(b);
-                convertToClassMethodKeyParamTypesMap(b);
-                convertToParamTypesKeySetMap(b);
+                for (Iterator<SootClass> iter = applicationClasses.snapshotIterator(); iter.hasNext();) {
+                    SootClass sootClass = iter.next();
+
+                    if(!ApplicationClassFilter.isApplicationClass(sootClass)){
+                        continue;
+                    }
+
+                    if(!sootClass.isConcrete()){
+                        continue;
+                    }
+
+                    List<SootMethod> methodCopyList = new ArrayList<>(sootClass.getMethods());
+                    methodCopyList.stream().filter(methodCopy -> {
+                        return methodCopy.isConcrete();
+                    }).forEach(methodCopy -> {
+                        Body b = methodCopy.retrieveActiveBody();
+                        convertToClassParamTypesKeyMethodValueMap(b);
+                        convertToNameParamTypesKeyClassValueMap(b);
+                        convertToClassMethodKeyParamTypesMap(b);
+                        convertToParamTypesKeySetMap(b);
+                    });
+                }
             }
-
         }));
+
+        PackManager.v().getPack("wjtp").add(new Transform("wjtp.SootStmtFieldRef", new SceneTransformer() {
+            @Override
+            protected void internalTransform(String s, Map<String, String> map) {
+                Chain<SootClass> applicationClasses = Scene.v().getApplicationClasses();
+
+                for (Iterator<SootClass> iter = applicationClasses.snapshotIterator(); iter.hasNext();) {
+                    SootClass sootClass = iter.next();
+
+                    if(!ApplicationClassFilter.isApplicationClass(sootClass)){
+                        continue;
+                    }
+
+                    if(!sootClass.isConcrete()){
+                        continue;
+                    }
+
+                    sootClass.getFields().stream().forEach(sootField -> {
+                        convertToClassNameFieldTypesMap(sootClass.getName(), sootField);
+                    });
+                }
+            }
+        }));
+
+        //Scene.v().addBasicClass("android.support.annotation.FloatRange",SIGNATURES);
 
         soot.Main.main(args);
 
         soot.G.reset();
+    }
+
+    private static void convertToClassNameFieldTypesMap(String clsName, SootField sootField){
+        FieldTypesValue fieldTypesValue = new FieldTypesValue();
+        fieldTypesValue.fieldName = sootField.getName();
+        fieldTypesValue.fieldType = sootField.getType().toString();
+
+        if(classNameFieldTypesMap.containsKey(clsName)){
+            Set<FieldTypesValue> fieldTypesValues = classNameFieldTypesMap.get(clsName);
+            fieldTypesValues.add(fieldTypesValue);
+        }else{
+            Set<FieldTypesValue> fieldTypesValues = new HashSet<>();
+            fieldTypesValues.add(fieldTypesValue);
+            classNameFieldTypesMap.put(clsName, fieldTypesValues);
+        }
     }
 
     private static void convertToClassParamTypesKeyMethodValueMap(Body b) {

@@ -1,18 +1,22 @@
-package lu.uni.snt.droidra.typeref.soot;
+package lu.uni.snt.droidra.typeref.soot.methodrelated;
 
 import com.google.common.base.Objects;
 import org.apache.commons.lang3.StringUtils;
 
-public class ClassMethodValue {
+/**
+ * Created by sun on 2019/9/27.
+ */
+public class ClassParamTypesKey {
+
     /**
      * refer to class name
      */
     public String cls;
 
     /**
-     * refer to method name
+     *Comma separated string
      */
-    public String method;
+    public String paramTypes;
 
     @Override
     public boolean equals(Object object){
@@ -22,14 +26,14 @@ public class ClassMethodValue {
         if (object == null) {
             return false;
         }
-        if (!(object instanceof ClassMethodValue)) {
+        if (!(object instanceof ClassParamTypesKey)) {
             return false;
         }
-        ClassMethodValue other = (ClassMethodValue) object;
+        ClassParamTypesKey other = (ClassParamTypesKey) object;
         if (!StringUtils.equals(other.cls, cls)) {
             return false;
         }
-        if (!StringUtils.equals(other.method, method)) {
+        if (!StringUtils.equals(other.paramTypes, paramTypes)) {
             return false;
         }
         return true;
@@ -37,7 +41,6 @@ public class ClassMethodValue {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.cls, this.method);
+        return Objects.hashCode(this.cls, this.paramTypes);
     }
-
 }

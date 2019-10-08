@@ -6,7 +6,8 @@ import lu.uni.snt.droidra.model.DroidRAConstant;
 import lu.uni.snt.droidra.model.StmtKey;
 import lu.uni.snt.droidra.model.StmtValue;
 import lu.uni.snt.droidra.service.CoalResultAccuracyVerifyService;
-import lu.uni.snt.droidra.typeref.soot.ClassMethodParamTypesKey;
+import lu.uni.snt.droidra.typeref.soot.methodrelated.ClassMethodParamTypesKey;
+import lu.uni.snt.droidra.util.ApplicationClassFilter;
 import lu.uni.snt.droidra.util.TypeConversionUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,7 +31,9 @@ public class CoalResultAccuracyVerifyServiceImpl implements CoalResultAccuracyVe
             Set<ClassDescription> oldSet = new HashSet<ClassDescription>();
             Set<ClassDescription> newSet = new HashSet<ClassDescription>();
 
-            value.getClsSet().stream().forEach(clsDesc -> {
+            value.getClsSet().stream().filter(clsDesc -> {
+                return null != clsDesc.cls && !clsDesc.cls.contains(DroidRAConstant.OPTIMIZED);
+            }).forEach(clsDesc -> {
                 String clsName = clsDesc.cls;
                 String name = clsDesc.name;
                 if (StringUtils.isNotBlank(clsName) && !StringUtils.equals(clsName, DroidRAConstant.STAR_SYMBOL)
@@ -42,10 +45,13 @@ public class CoalResultAccuracyVerifyServiceImpl implements CoalResultAccuracyVe
                             //TODO 2019/9/30 sun
                             break;
                         case METHOD_CALL:
+                            if(!ApplicationClassFilter.isApplicationClass(clsName)){
+                                break;
+                            }
                             ClassMethodParamTypesKey classMethodParamTypesKey = new ClassMethodParamTypesKey();
                             classMethodParamTypesKey.cls = clsName;
                             classMethodParamTypesKey.method = name;
-                            classMethodParamTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(key.getMethod().getParameterTypes());
+                            classMethodParamTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(key.getStmt().getInvokeExpr().getMethod().getParameterTypes());
 
                             String classMethodParamTypesKeyString = classMethodParamTypesKeyStringMap.get(classMethodParamTypesKey);
 
@@ -53,8 +59,8 @@ public class CoalResultAccuracyVerifyServiceImpl implements CoalResultAccuracyVe
                                 oldSet.add(clsDesc);
 
                                 ClassDescription cd = new ClassDescription();
-                                cd.cls = DroidRAConstant.INACCURATE + clsDesc;
-                                cd.name = DroidRAConstant.INACCURATE + clsName;
+                                cd.cls = DroidRAConstant.INACCURATE + clsName;
+                                cd.name = DroidRAConstant.INACCURATE + name;
                                 newSet.add(cd);
                             }
                             break;
