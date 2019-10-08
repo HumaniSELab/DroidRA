@@ -10,6 +10,8 @@ import soot.util.Chain;
 
 import java.util.*;
 
+import static soot.SootClass.SIGNATURES;
+
 /**
  * Created by sun on 2019/9/26.
  *
@@ -122,7 +124,7 @@ public class SootStmtRef {
             }
         }));
 
-        //Scene.v().addBasicClass("android.support.annotation.FloatRange",SIGNATURES);
+        Scene.v().addBasicClass("android.support.annotation.FloatRange", SIGNATURES);
 
         soot.Main.main(args);
 
@@ -164,7 +166,7 @@ public class SootStmtRef {
         NameParamTypesKey nameParamTypesKey = new NameParamTypesKey();
         nameParamTypesKey.name = b.getMethod().getName();
         nameParamTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(b.getMethod().getParameterTypes());
-        String className = b.getClass().getName();
+        String className = b.getMethod().getDeclaringClass().getName();
 
         if(nameParamTypesKeyClassValueMap.containsKey(nameParamTypesKey)){
             Set<String> classValueSet = nameParamTypesKeyClassValueMap.get(nameParamTypesKey);
@@ -178,7 +180,7 @@ public class SootStmtRef {
 
     private static void convertToClassMethodKeyParamTypesMap(Body b){
         ClassMethodParamTypesKey classMethodParamTypesKey = new ClassMethodParamTypesKey();
-        classMethodParamTypesKey.cls = b.getClass().getName();
+        classMethodParamTypesKey.cls = b.getMethod().getDeclaringClass().getName();
         classMethodParamTypesKey.method = b.getMethod().getName();
         classMethodParamTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(b.getMethod().getParameterTypes());
 
@@ -189,7 +191,7 @@ public class SootStmtRef {
         ParamTypesKey paramTypesKey = new ParamTypesKey();
         paramTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(b.getMethod().getParameterTypes());
         ClassMethodValue classMethodValue = new ClassMethodValue();
-        classMethodValue.cls = b.getClass().getName();
+        classMethodValue.cls = b.getMethod().getDeclaringClass().getName();
         classMethodValue.method = b.getMethod().getName();
 
         if(paramTypesKeySetMap.containsKey(paramTypesKey)){

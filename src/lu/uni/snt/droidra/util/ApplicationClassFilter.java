@@ -23,7 +23,6 @@ public class ApplicationClassFilter {
         if (StringUtils.isBlank(clsName)) {
             return false;
         }
-        // TODO: 2019/10/8  startsWith解析.?
         if (clsName.startsWith("com.google.")
                 || clsName.startsWith("soot.")
                 || clsName.startsWith("android.")
@@ -33,4 +32,5 @@ public class ApplicationClassFilter {
         }
         return true;
     }
+
 }
