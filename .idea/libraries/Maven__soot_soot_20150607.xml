@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: soot:soot:20150607">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/soot/soot/20150607/soot-20150607.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/soot/soot/20150607/soot-20150607-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/soot/soot/20150607/soot-20150607-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
