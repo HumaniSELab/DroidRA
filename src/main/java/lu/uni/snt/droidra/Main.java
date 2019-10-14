@@ -10,11 +10,27 @@ import lu.uni.snt.droidra.model.ReflectionExchangable;
 import lu.uni.snt.droidra.model.ReflectionProfile;
 import lu.uni.snt.droidra.model.StmtValue;
 import lu.uni.snt.droidra.model.UniqStmt;
+import lu.uni.snt.droidra.retarget.DummyMainGenerator;
 import lu.uni.snt.droidra.retarget.RetargetWithDummyMainGenerator;
+import lu.uni.snt.droidra.retarget.SootSetup;
 import lu.uni.snt.droidra.typeref.ArrayVarItemTypeRef;
 import lu.uni.snt.droidra.typeref.soot.SootStmtRef;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xmlpull.v1.XmlPullParserException;
+import soot.G;
+import soot.PackManager;
+import soot.Scene;
+import soot.jimple.infoflow.AbstractInfoflow;
+import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
+import soot.jimple.infoflow.android.SetupApplication;
+import soot.jimple.infoflow.android.resources.LayoutFileParser;
+import soot.jimple.infoflow.cfg.LibraryClassPatcher;
+import soot.options.Options;
 
 import java.io.*;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -79,6 +95,8 @@ public class Main
 	 * @param args
 	 */
 
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
 	public static void main(String[] args) 
 	{
 		long startTime = System.currentTimeMillis();
@@ -104,8 +122,15 @@ public class Main
 			File workspace = new File(GlobalRef.WORKSPACE);
 			workspace.mkdirs();
 		}
-		
-		init(apkPath, forceAndroidJar, dexes);
+
+		try {
+			calculateEntryPoint(apkPath, forceAndroidJar);
+		} catch (IOException | XmlPullParserException e) {
+			e.printStackTrace();
+			System.out.println("==>calculateEntryPoint error:" + e);
+		}
+		// sunxiaobiu: 14/10/19 change init to new FlowDroid Setup Method
+		//init(apkPath, forceAndroidJar, dexes);
 		
 		long afterDummyMain = System.currentTimeMillis();
 		System.out.println("==>TIME:" + afterDummyMain);
@@ -129,7 +154,45 @@ public class Main
 	{
 		return (int) new Object();
 	}
-	
+
+	/**
+	 * calculate Entry Point in the given APK file.
+	 */
+	public static void calculateEntryPoint(String apkPath, String forceAndroidJar) throws IOException, XmlPullParserException {
+		DummyMainGenerator dummyMainGenerator = new DummyMainGenerator(apkPath);
+		InfoflowAndroidConfiguration config = dummyMainGenerator.config;
+		// sunxiaobiu: 14/10/19 you can modify your own config by changing "config" parameters
+		config.getAnalysisFileConfig().setTargetAPKFile(apkPath);
+		config.getAnalysisFileConfig().setAndroidPlatformDir(forceAndroidJar);
+
+		G.reset();
+		SootSetup.initializeSoot(config, forceAndroidJar);
+
+		DroidRAUtils.extractApkInfo(apkPath);
+		GlobalRef.clsPath = forceAndroidJar;
+
+
+		if (config.getCallbackConfig().getEnableCallbacks()) {
+			dummyMainGenerator.parseAppResources();
+			LayoutFileParser lfp = dummyMainGenerator.createLayoutFileParser();
+				switch (config.getCallbackConfig().getCallbackAnalyzer()) {
+					case Fast:
+						dummyMainGenerator.calculateCallbackMethodsFast(lfp, null);
+						break;
+					case Default:
+						dummyMainGenerator.calculateCallbackMethods(lfp, null);
+						break;
+					default:
+						throw new RuntimeException("Unknown callback analyzer");
+				}
+
+		} else {
+			// Create the new iteration of the main method
+			dummyMainGenerator.createMainMethod(null);
+			dummyMainGenerator.constructCallgraphInternal();
+		}
+	}
+
 	public static void init(String apkPath, String forceAndroidJar, String additionalDexes)
 	{
 		DroidRAUtils.extractApkInfo(apkPath);	
@@ -256,4 +319,5 @@ public class Main
 			e.printStackTrace();
 		}
 	}
+
 }

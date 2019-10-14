@@ -4,6 +4,7 @@ import heros.solver.Pair;
 import lu.uni.snt.droidra.booster.InstrumentationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xmlpull.v1.XmlPullParserException;
 import soot.*;
 import soot.javaToJimple.LocalGenerator;
 import soot.jimple.*;
@@ -12,6 +13,7 @@ import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
 import soot.jimple.infoflow.android.callbacks.AbstractCallbackAnalyzer;
 import soot.jimple.infoflow.android.callbacks.CallbackDefinition;
 import soot.jimple.infoflow.android.callbacks.DefaultCallbackAnalyzer;
+import soot.jimple.infoflow.android.callbacks.FastCallbackAnalyzer;
 import soot.jimple.infoflow.android.callbacks.filters.AlienFragmentFilter;
 import soot.jimple.infoflow.android.callbacks.filters.AlienHostComponentFilter;
 import soot.jimple.infoflow.android.callbacks.filters.ApplicationCallbackFilter;
@@ -52,17 +54,17 @@ public class DummyMainGenerator extends SceneTransformer{
 	
 	public static Set<String> addtionalDexFiles = new HashSet<String>();
 
-	protected AndroidEntryPointCreator entryPointCreator = null;
-	protected ProcessManifest manifest = null;
-	protected Set<SootClass> entrypoints = null;
-	protected MultiMap<SootClass, CallbackDefinition> callbackMethods = new HashMultiMap<>();
-	protected MultiMap<SootClass, SootClass> fragmentClasses = new HashMultiMap<>();
-	protected Set<String> callbackClasses = null;
-	protected InfoflowAndroidConfiguration config = new InfoflowAndroidConfiguration();
-	protected IValueProvider valueProvider = null;
-	protected IccInstrumenter iccInstrumenter = null;
-	protected ARSCFileParser resources = null;
-	protected SootClass scView = null;
+	public AndroidEntryPointCreator entryPointCreator = null;
+	public ProcessManifest manifest = null;
+	public Set<SootClass> entrypoints = null;
+	public MultiMap<SootClass, CallbackDefinition> callbackMethods = new HashMultiMap<>();
+	public MultiMap<SootClass, SootClass> fragmentClasses = new HashMultiMap<>();
+	public Set<String> callbackClasses = null;
+	public InfoflowAndroidConfiguration config = new InfoflowAndroidConfiguration();
+	public IValueProvider valueProvider = null;
+	public IccInstrumenter iccInstrumenter = null;
+	public ARSCFileParser resources = null;
+	public SootClass scView = null;
 
 	public DummyMainGenerator(String apkFileLocation)
 	{
@@ -82,8 +84,6 @@ public class DummyMainGenerator extends SceneTransformer{
 				SootClass sc = Scene.v().getSootClassUnsafe(className);
 				if (sc != null){
 					this.entrypoints.add(sc);
-					LayoutFileParser lfp = createLayoutFileParser();
-					calculateCallbackMethods(lfp, sc);
 				}
 			}
 			// Parse the resource file
@@ -92,6 +92,8 @@ public class DummyMainGenerator extends SceneTransformer{
 			this.resources.parse(apkFileLocation);
 			logger.info("ARSC file parsing took " + (System.nanoTime() - beforeARSC) / 1E9 + " seconds");
 
+			LayoutFileParser lfp = createLayoutFileParser();
+			calculateCallbackMethods(lfp, null);
 			SootMethod mainMethod = generateMain(entrypoints);
 			
 			System.out.println(mainMethod.retrieveActiveBody());
@@ -101,12 +103,41 @@ public class DummyMainGenerator extends SceneTransformer{
 			ex.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Parses common app resources such as the manifest file
+	 *
+	 * @throws IOException            Thrown if the given source/sink file could not
+	 *                                be read.
+	 * @throws XmlPullParserException Thrown if the Android manifest file could not
+	 *                                be read.
+	 */
+	public void parseAppResources() throws IOException, XmlPullParserException {
+		final String targetAPK = config.getAnalysisFileConfig().getTargetAPKFile();
+
+		// To look for callbacks, we need to start somewhere. We use the Android
+		// lifecycle methods for this purpose.
+		this.manifest = new ProcessManifest(targetAPK);
+		Set<String> entryPoints = manifest.getEntryPointClasses();
+		this.entrypoints = new HashSet<>(entryPoints.size());
+		for (String className : entryPoints) {
+			SootClass sc = Scene.v().getSootClassUnsafe(className);
+			if (sc != null)
+				this.entrypoints.add(sc);
+		}
+
+		// Parse the resource file
+		long beforeARSC = System.nanoTime();
+		this.resources = new ARSCFileParser();
+		this.resources.parse(targetAPK);
+		logger.info("ARSC file parsing took " + (System.nanoTime() - beforeARSC) / 1E9 + " seconds");
+	}
+
 	public static Set<String> getComponents(String apkFileLocation)
 	{
 		Set<String> entrypoints = null;
 		try
-		{	
+		{
 			ProcessManifest processMan = new ProcessManifest(apkFileLocation);
 			entrypoints = processMan.getEntryPointClasses();
 		}
@@ -114,33 +145,33 @@ public class DummyMainGenerator extends SceneTransformer{
 		{
 			ex.printStackTrace();
 		}
-		
+
 		return entrypoints;
 	}
-	
+
 	public static SootMethod generateDummyMain(String apkFileLocation)
 	{
 		SootMethod mainMethod = null;
-		
+
 		try
-		{	
+		{
 			ProcessManifest processMan = new ProcessManifest(apkFileLocation);
 			Set<String> entrypoints = processMan.getEntryPointClasses();
-			
+
 			DummyMainGenerator dmGenerator = new DummyMainGenerator(apkFileLocation);
-			
+
 			mainMethod = dmGenerator.generateMain(entrypoints);
-			
+
 			System.out.println(mainMethod.retrieveActiveBody());
 		}
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
-		
+
 		return mainMethod;
 	}
-	
+
 	public SootMethod generateMain(Set<String> components)
 	{
 		SootMethod mainMethod = new SootMethod(DUMMY_METHOD_NAME, 
@@ -463,7 +494,7 @@ public class DummyMainGenerator extends SceneTransformer{
 	 *                  Pass null to compute callbacks for all components.
 	 * @throws IOException Thrown if a required configuration cannot be read
 	 */
-	private void calculateCallbackMethods(LayoutFileParser lfp, SootClass component) throws IOException {
+	public void calculateCallbackMethods(LayoutFileParser lfp, SootClass component) throws IOException {
 		final InfoflowAndroidConfiguration.CallbackConfiguration callbackConfig = new InfoflowAndroidConfiguration.CallbackConfiguration();
 
 		// Make sure that we don't have any leftovers from previous runs
@@ -645,12 +676,57 @@ public class DummyMainGenerator extends SceneTransformer{
 	}
 
 	/**
+	 * Calculates the set of callback methods declared in the XML resource files or
+	 * the app's source code. This method prefers performance over precision and
+	 * scans the code including unreachable methods.
+	 *
+	 * @param lfp        The layout file parser to be used for analyzing UI controls
+	 * @param entryPoint The entry point for which to calculate the callbacks. Pass
+	 *                   null to calculate callbacks for all entry points.
+	 * @throws IOException Thrown if a required configuration cannot be read
+	 */
+	public void calculateCallbackMethodsFast(LayoutFileParser lfp, SootClass component) throws IOException {
+		// Construct the current callgraph
+		releaseCallgraph();
+		createMainMethod(component);
+		constructCallgraphInternal();
+
+		// Get the classes for which to find callbacks
+		Set<SootClass> entryPointClasses = getComponentsToAnalyze(component);
+
+		// Collect the callback interfaces implemented in the app's
+		// source code
+		AbstractCallbackAnalyzer jimpleClass = callbackClasses == null
+				? new FastCallbackAnalyzer(config, entryPointClasses, callbackFile)
+				: new FastCallbackAnalyzer(config, entryPointClasses, callbackClasses);
+		if (valueProvider != null)
+			jimpleClass.setValueProvider(valueProvider);
+		jimpleClass.collectCallbackMethods();
+
+		// Collect the results
+		this.callbackMethods.putAll(jimpleClass.getCallbackMethods());
+		this.entrypoints.addAll(jimpleClass.getDynamicManifestComponents());
+
+		// Find the user-defined sources in the layout XML files. This
+		// only needs to be done once, but is a Soot phase.
+		lfp.parseLayoutFileDirect(config.getAnalysisFileConfig().getTargetAPKFile());
+
+		// Collect the XML-based callback methods
+		collectXmlBasedCallbackMethods(lfp, jimpleClass);
+
+		// Construct the final callgraph
+		releaseCallgraph();
+		createMainMethod(component);
+		constructCallgraphInternal();
+	}
+
+	/**
 	 * Creates the main method based on the current callback information, injects it
 	 * into the Soot scene.
 	 *
 	 * @param component
 	 */
-	private void createMainMethod(SootClass component) {
+	public void createMainMethod(SootClass component) {
 		// There is no need to create a main method if we don't want to generate
 		// a callgraph
 		if (config.getSootIntegrationMode() == InfoflowAndroidConfiguration.SootIntegrationMode.UseExistingCallgraph)
@@ -687,7 +763,7 @@ public class DummyMainGenerator extends SceneTransformer{
 	/**
 	 * Triggers the callgraph construction in Soot
 	 */
-	private void constructCallgraphInternal() {
+	public void constructCallgraphInternal() {
 		// If we are configured to use an existing callgraph, we may not replace
 		// it. However, we must make sure that there really is one.
 		if (config.getSootIntegrationMode() == InfoflowAndroidConfiguration.SootIntegrationMode.UseExistingCallgraph) {
@@ -929,7 +1005,7 @@ public class DummyMainGenerator extends SceneTransformer{
 	 *
 	 * @return The newly created layout file parser.
 	 */
-	protected LayoutFileParser createLayoutFileParser() {
+	public LayoutFileParser createLayoutFileParser() {
 		return new LayoutFileParser(this.manifest.getPackageName(), this.resources);
 	}
 
