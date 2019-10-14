@@ -80,15 +80,18 @@ public class DummyMainGenerator extends SceneTransformer{
 			this.entrypoints = new HashSet<>(entrypoints.size());
 			for (String className : entrypoints) {
 				SootClass sc = Scene.v().getSootClassUnsafe(className);
-				if (sc != null)
+				if (sc != null){
 					this.entrypoints.add(sc);
+					LayoutFileParser lfp = createLayoutFileParser();
+					calculateCallbackMethods(lfp, sc);
+				}
 			}
 			// Parse the resource file
 			long beforeARSC = System.nanoTime();
 			this.resources = new ARSCFileParser();
 			this.resources.parse(apkFileLocation);
 			logger.info("ARSC file parsing took " + (System.nanoTime() - beforeARSC) / 1E9 + " seconds");
-			
+
 			SootMethod mainMethod = generateMain(entrypoints);
 			
 			System.out.println(mainMethod.retrieveActiveBody());
@@ -168,7 +171,7 @@ public class DummyMainGenerator extends SceneTransformer{
 			}
 			
 			//SootMethod method = ICCDummyMainCreator.v().generateDummyMainMethod(str);
-			// TODO: 13/10/19 change  ICCDummyMainCreator to createEntryPointCreator inorder to detect fragment in activity
+			// TODO: 13/10/19 change  ICCDummyMainCreator to createEntryPointCreator in order to detect fragment in activity
 			entryPointCreator = createEntryPointCreator(sc);
 			SootMethod method = entryPointCreator.createDummyMain();
 
@@ -354,32 +357,6 @@ public class DummyMainGenerator extends SceneTransformer{
     	
     	return mainMethod;
 	}
-	
-
-	public void instrumentDummyMainMethod(SootMethod mainMethod)
-	{
-		Body body = mainMethod.getActiveBody();
-
-    	PatchingChain<Unit> units = body.getUnits();
-    	for (Iterator<Unit> iter = units.snapshotIterator(); iter.hasNext(); )
-    	{
-    		Stmt stmt = (Stmt) iter.next();
-
-    		if (stmt instanceof IdentityStmt)
-    		{
-    			continue;
-    		}
-
-    		//For the purpose of confusion dex optimization (because of the strategy of generating dummyMain method)
-			AssignStmt aStmt = (AssignStmt) stmt;
-			SootMethod fuzzyMe = generateFuzzyMethod(mainMethod.getDeclaringClass());
-			InvokeExpr invokeExpr = Jimple.v().newVirtualInvokeExpr(body.getThisLocal(), fuzzyMe.makeRef());
-			Unit assignU = Jimple.v().newAssignStmt(aStmt.getLeftOp(), invokeExpr);
-			units.insertAfter(assignU, aStmt);
-
-			break;
-    	}
-	}
     
 	public SootMethod generateFuzzyMethod(SootClass sootClass)
 	{
@@ -403,10 +380,6 @@ public class DummyMainGenerator extends SceneTransformer{
 	    }
 	        
 	    return fuzzyMeMethod;
-	}
-
-	public void setFullMethodCover(boolean fullMethodCover) {
-		this.fullMethodCover = fullMethodCover;
 	}
 
 	/**
@@ -948,6 +921,16 @@ public class DummyMainGenerator extends SceneTransformer{
 			for (K value : original.get(key))
 				newTag.put(value, key);
 		return newTag;
+	}
+
+	/**
+	 * Creates a new layout file parser. Derived classes can override this method to
+	 * supply their own parser.
+	 *
+	 * @return The newly created layout file parser.
+	 */
+	protected LayoutFileParser createLayoutFileParser() {
+		return new LayoutFileParser(this.manifest.getPackageName(), this.resources);
 	}
 
 
