@@ -15,22 +15,14 @@ import lu.uni.snt.droidra.retarget.RetargetWithDummyMainGenerator;
 import lu.uni.snt.droidra.retarget.SootSetup;
 import lu.uni.snt.droidra.typeref.ArrayVarItemTypeRef;
 import lu.uni.snt.droidra.typeref.soot.SootStmtRef;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParserException;
 import soot.G;
-import soot.PackManager;
-import soot.Scene;
-import soot.jimple.infoflow.AbstractInfoflow;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
-import soot.jimple.infoflow.android.SetupApplication;
 import soot.jimple.infoflow.android.resources.LayoutFileParser;
-import soot.jimple.infoflow.cfg.LibraryClassPatcher;
-import soot.options.Options;
 
 import java.io.*;
-import java.util.Collections;
 import java.util.Map;
 
 /**

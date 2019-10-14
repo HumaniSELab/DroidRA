@@ -1,15 +1,13 @@
 package lu.uni.snt.droidra.retarget;
 
-import java.io.File;
-import java.io.IOException;
-
-
 import org.apache.commons.io.FileUtils;
-
 import soot.G;
 import soot.PackManager;
 import soot.Transform;
 import soot.options.Options;
+
+import java.io.File;
+import java.io.IOException;
 
 public class RetargetWithDummyMainGenerator 
 {

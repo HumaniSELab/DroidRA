@@ -8,7 +8,6 @@ import soot.Scene;
 import soot.jimple.infoflow.AbstractInfoflow;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
 import soot.jimple.infoflow.cfg.LibraryClassPatcher;
-import soot.jimple.infoflow.memory.MemoryWarningSystem;
 import soot.options.Options;
 
 import java.io.File;
