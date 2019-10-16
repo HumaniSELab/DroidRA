@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParserException;
 import soot.G;
+import soot.Scene;
+import soot.SootClass;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
 import soot.jimple.infoflow.android.resources.LayoutFileParser;
 
@@ -86,8 +88,6 @@ public class Main
 	 * 
 	 * @param args
 	 */
-
-	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public static void main(String[] args) 
 	{
@@ -183,6 +183,9 @@ public class Main
 			dummyMainGenerator.createMainMethod(null);
 			dummyMainGenerator.constructCallgraphInternal();
 		}
+
+		SootClass dummyMainClass = Scene.v().getSootClass("dummyMainClass");
+
 	}
 
 	public static void init(String apkPath, String forceAndroidJar, String additionalDexes)

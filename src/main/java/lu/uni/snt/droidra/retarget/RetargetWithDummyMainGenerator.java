@@ -26,9 +26,8 @@ public class RetargetWithDummyMainGenerator
 		retargetWithDummyMainGeneration(apkPath, androidJar, outputDir, additionalDexes, false);
 	}
 	
-	public static void retargetWithDummyMainGeneration(String apkPath, String androidJar, String outputDir, String[] additionalDexes, boolean outjar) 
-	{
-		try 
+	public static void retargetWithDummyMainGeneration(String apkPath, String androidJar, String outputDir, String[] additionalDexes, boolean outjar) {
+		/*try
 		{
 			FileUtils.cleanDirectory(new File(outputDir));
 		} 
@@ -84,6 +83,6 @@ public class RetargetWithDummyMainGenerator
 			{
 				DexRetargetor.retargetDex(dexPath, androidJar, outputDir);
 			}
-		}
+		}*/
 	}
 }

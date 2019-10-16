@@ -35,8 +35,7 @@
     <orderEntry type="library" name="Maven: pxb.android:axml:2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: ca.mcgill.sable:axmlprinter:2016-07-27" level="project" />
     <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.4.0" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.6.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.6.1" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.21" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.21" level="project" />
   </component>
 </module>

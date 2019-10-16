@@ -41,14 +41,14 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 
-public class DummyMainGenerator extends SceneTransformer{
+public class DummyMainGenerator {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private String apkFileLocation = null;
 	private boolean fullMethodCover = false;
 	
-	public static final String DUMMY_CLASS_NAME = "DummyMainClass";
+	public static final String DUMMY_CLASS_NAME = "dummyMainClass";
 	public static final String DUMMY_METHOD_NAME = "main";
 	protected String callbackFile = "AndroidCallbacks.txt";
 	
@@ -69,39 +69,6 @@ public class DummyMainGenerator extends SceneTransformer{
 	public DummyMainGenerator(String apkFileLocation)
 	{
 		this.apkFileLocation = apkFileLocation;
-	}
-	
-	@Override
-	protected void internalTransform(String phaseName, Map<String, String> options) 
-	{
-		try
-		{
-			ProcessManifest processMan = new ProcessManifest(apkFileLocation);
-			this.manifest = processMan;
-			Set<String> entrypoints = processMan.getEntryPointClasses();
-			this.entrypoints = new HashSet<>(entrypoints.size());
-			for (String className : entrypoints) {
-				SootClass sc = Scene.v().getSootClassUnsafe(className);
-				if (sc != null){
-					this.entrypoints.add(sc);
-				}
-			}
-			// Parse the resource file
-			long beforeARSC = System.nanoTime();
-			this.resources = new ARSCFileParser();
-			this.resources.parse(apkFileLocation);
-			logger.info("ARSC file parsing took " + (System.nanoTime() - beforeARSC) / 1E9 + " seconds");
-
-			LayoutFileParser lfp = createLayoutFileParser();
-			calculateCallbackMethods(lfp, null);
-			SootMethod mainMethod = generateMain(entrypoints);
-			
-			System.out.println(mainMethod.retrieveActiveBody());
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
 	}
 
 	/**
