@@ -15,16 +15,19 @@ import lu.uni.snt.droidra.retarget.RetargetWithDummyMainGenerator;
 import lu.uni.snt.droidra.retarget.SootSetup;
 import lu.uni.snt.droidra.typeref.ArrayVarItemTypeRef;
 import lu.uni.snt.droidra.typeref.soot.SootStmtRef;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.collections4.CollectionUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import soot.G;
 import soot.Scene;
 import soot.SootClass;
+import soot.SootMethod;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
 import soot.jimple.infoflow.android.resources.LayoutFileParser;
 
 import java.io.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -96,19 +99,19 @@ public class Main
 		
 		String apkPath = args[0];
 		String forceAndroidJar = args[1];
-		
+
 		String dexes = null;
 		if (args.length > 2)
 		{
 			dexes = args[2];
 		}
-		
+
 		String apkName = apkPath;
 		if (apkName.contains("/"))
 		{
 			apkName = apkName.substring(apkName.lastIndexOf('/')+1);
 		}
-		
+
 		if (! new File(GlobalRef.WORKSPACE).exists())
 		{
 			File workspace = new File(GlobalRef.WORKSPACE);
@@ -116,6 +119,13 @@ public class Main
 		}
 
 		try {
+			SootStmtRef.setup(apkPath, forceAndroidJar);
+			GlobalRef.classParamTypesKeyMethodValueMap = SootStmtRef.classParamTypesKeyMethodValueMap;
+			GlobalRef.nameParamTypesKeyClassValueMap = SootStmtRef.nameParamTypesKeyClassValueMap;
+			GlobalRef.classMethodParamTypesKeyStringMap = SootStmtRef.classMethodParamTypesKeyStringMap;
+			GlobalRef.paramTypesKeySetMap = SootStmtRef.paramTypesKeySetMap;
+			GlobalRef.classNameFieldTypesMap = SootStmtRef.classNameFieldTypesMap;
+
 			calculateEntryPoint(apkPath, forceAndroidJar);
 		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
@@ -163,7 +173,6 @@ public class Main
 		DroidRAUtils.extractApkInfo(apkPath);
 		GlobalRef.clsPath = forceAndroidJar;
 
-
 		if (config.getCallbackConfig().getEnableCallbacks()) {
 			dummyMainGenerator.parseAppResources();
 			LayoutFileParser lfp = dummyMainGenerator.createLayoutFileParser();
@@ -184,7 +193,15 @@ public class Main
 			dummyMainGenerator.constructCallgraphInternal();
 		}
 
-		SootClass dummyMainClass = Scene.v().getSootClass("dummyMainClass");
+
+		SootClass originSootClass = Scene.v().getSootClass("dummyMainClass");
+		if(CollectionUtils.isNotEmpty(originSootClass.getMethods())){
+			for(int i = 0; i < originSootClass.getMethods().size(); i++){
+				if(originSootClass.getMethods().get(i).getName().equals("dummyMainMethod")){
+					originSootClass.getMethods().get(i).setName("main");
+				}
+			}
+		}
 
 	}
 
@@ -210,16 +227,9 @@ public class Main
 			"-model", GlobalRef.coalModelPath,
 			"-input", GlobalRef.WORKSPACE
 		};
-		
-		ArrayVarItemTypeRef.setup(GlobalRef.apkPath, GlobalRef.clsPath);
-		GlobalRef.arrayTypeRef = ArrayVarItemTypeRef.arrayTypeRef;
 
-		SootStmtRef.setup(GlobalRef.apkPath, GlobalRef.clsPath);
-		GlobalRef.classParamTypesKeyMethodValueMap = SootStmtRef.classParamTypesKeyMethodValueMap;
-		GlobalRef.nameParamTypesKeyClassValueMap = SootStmtRef.nameParamTypesKeyClassValueMap;
-		GlobalRef.classMethodParamTypesKeyStringMap = SootStmtRef.classMethodParamTypesKeyStringMap;
-		GlobalRef.paramTypesKeySetMap = SootStmtRef.paramTypesKeySetMap;
-		GlobalRef.classNameFieldTypesMap = SootStmtRef.classNameFieldTypesMap;
+//		ArrayVarItemTypeRef.setup(GlobalRef.apkPath, GlobalRef.clsPath);
+//		GlobalRef.arrayTypeRef = ArrayVarItemTypeRef.arrayTypeRef;
 
 		DroidRAAnalysis<DefaultCommandLineArguments> analysis = new DroidRAAnalysis<>();
 		DefaultCommandLineParser parser = new DefaultCommandLineParser();

@@ -80,6 +80,7 @@
 /Users/xsun0035/workspace/monash/DroidRA/src/main/java/edu/psu/cse/siis/coal/field/transformers/set/Clear.java
 /Users/xsun0035/workspace/monash/DroidRA/src/main/java/lu/uni/snt/droidra/booster/DefaultInstrumentation.java
 /Users/xsun0035/workspace/monash/DroidRA/src/main/java/lu/uni/snt/droidra/model/DroidRAConstant.java
+/Users/xsun0035/workspace/monash/DroidRA/src/main/java/lu/uni/snt/droidra/retarget/SootSetup.java
 /Users/xsun0035/workspace/monash/DroidRA/src/main/java/lu/uni/snt/droidra/model/SimpleStmtValue.java
 /Users/xsun0035/workspace/monash/DroidRA/src/main/java/edu/psu/cse/siis/coal/ReturnFlowFunctionFactory.java
 /Users/xsun0035/workspace/monash/DroidRA/src/main/java/lu/uni/snt/droidra/typeref/ArrayVarItemTypeRef.java

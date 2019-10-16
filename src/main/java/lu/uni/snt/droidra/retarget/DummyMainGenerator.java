@@ -2,6 +2,7 @@ package lu.uni.snt.droidra.retarget;
 
 import heros.solver.Pair;
 import lu.uni.snt.droidra.booster.InstrumentationUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParserException;
@@ -155,9 +156,9 @@ public class DummyMainGenerator {
     	sootClass.setInScene(true);
     	
     	sootClass.addMethod(mainMethod);
-		
+
     	LocalGenerator generator = new LocalGenerator(body);
-		
+
     	body.insertIdentityStmts();
     	
 		for (String str : components)

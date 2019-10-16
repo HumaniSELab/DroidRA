@@ -77,35 +77,35 @@ public class ArrayVarItemTypeRef
 	
 	public static void setup(String input, String clsPath)
 	{
-		String[] args =
-        {
-            "-process-dir", input,
-            "-ire",
-            "-pp",
-            "-allow-phantom-refs",
-            "-w",
-            "-cp", clsPath,
-			"-p", "cg", "enabled:false",
-			"-p", "jop.cpf", "enabled:true"
-        };
-			
-		G.reset();
+//		String[] args =
+//        {
+//            "-process-dir", input,
+//            "-ire",
+//            "-pp",
+//            "-allow-phantom-refs",
+//            "-w",
+//            "-cp", clsPath,
+//			  "-p", "cg", "enabled:false",
+//			  "-p", "jop.cpf", "enabled:true"
+//        };
+//
+//		G.reset();
+//
+//		if (input.endsWith(".apk"))
+//		{
+//			Options.v().set_src_prec(Options.src_prec_apk);
+//			Options.v().set_force_android_jar(clsPath);
+//		}
+//		else
+//		{
+//			Options.v().set_src_prec(Options.src_prec_class);
+//		}
+//
+//		Options.v().set_output_format(Options.output_format_none);
+//		//Options.v().set_output_format(Options.output_format_class);
 		
-		if (input.endsWith(".apk"))
-		{
-			Options.v().set_src_prec(Options.src_prec_apk);
-			Options.v().set_force_android_jar(clsPath);
-		}
-		else
-		{
-			Options.v().set_src_prec(Options.src_prec_class);
-		}
-			
-		Options.v().set_output_format(Options.output_format_none);
-		//Options.v().set_output_format(Options.output_format_class);
 		
-		
-        PackManager.v().getPack("jtp").add(new Transform("jtp.ArgumentTypeRef", new BodyTransformer() {
+        PackManager.v().getPack("wjtp").add(new Transform("wjtp.ArgumentTypeRef", new BodyTransformer() {
 
 			@Override
 			protected void internalTransform(Body b, String phaseName, Map<String, String> options) 
@@ -265,9 +265,9 @@ public class ArrayVarItemTypeRef
 			}
         	
         }));
-		
-        soot.Main.main(args);
-        
-        G.reset();
+//
+//        soot.Main.main(args);
+//
+//        G.reset();
 	}
 }

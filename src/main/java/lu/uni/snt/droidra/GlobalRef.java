@@ -7,6 +7,8 @@ import lu.uni.snt.droidra.model.UniqStmt;
 import lu.uni.snt.droidra.typeref.ArrayVarValue;
 import lu.uni.snt.droidra.typeref.soot.fieldrelated.FieldTypesValue;
 import lu.uni.snt.droidra.typeref.soot.methodrelated.*;
+import soot.SootClass;
+import soot.SootMethod;
 
 import java.util.Map;
 import java.util.Set;
@@ -49,4 +51,5 @@ public class GlobalRef
 	public static Map<String, Set<FieldTypesValue>> classNameFieldTypesMap;
 
 	public static final String jsonFile = "refl.json";
+
 }

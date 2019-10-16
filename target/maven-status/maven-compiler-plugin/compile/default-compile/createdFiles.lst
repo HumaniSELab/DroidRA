@@ -29,6 +29,7 @@ edu/psu/cse/siis/coal/lang/ParseException.class
 lu/uni/snt/droidra/booster/ApkBooster$1.class
 lu/uni/snt/droidra/AndroidMethodReturnValueAnalyses$1.class
 edu/psu/cse/siis/coal/arguments/SourceMethodReturnValueAnalysis.class
+lu/uni/snt/droidra/Main$1.class
 edu/psu/cse/siis/coal/field/transformers/set/FieldReplaceTransformerFactory.class
 edu/psu/cse/siis/coal/arguments/ArgumentValueAnalysis.class
 lu/uni/snt/droidra/model/DroidRAConstant.class
@@ -65,6 +66,7 @@ edu/psu/cse/siis/coal/arguments/ArgumentValueManager.class
 edu/psu/cse/siis/coal/PropagationProblem$1.class
 lu/uni/snt/droidra/service/UnknowValueInferService.class
 edu/psu/cse/siis/coal/CallToReturnFlowFunctionFactory$5.class
+lu/uni/snt/droidra/retarget/SootSetup.class
 lu/uni/snt/droidra/DroidRAUtils.class
 edu/psu/cse/siis/coal/ReturnFlowFunctionFactory.class
 edu/psu/cse/siis/coal/field/transformers/set/SetFieldTransformer.class
@@ -102,6 +104,7 @@ edu/psu/cse/siis/coal/Constants$DefaultArgumentTypes$Scalar.class
 lu/uni/snt/droidra/typeref/ArrayVarItemTypeRef$1.class
 edu/psu/cse/siis/coal/field/TransformerSequence.class
 edu/psu/cse/siis/coal/Constants$DefaultArgumentTypes$Set.class
+lu/uni/snt/droidra/retarget/SootSetup$1.class
 edu/psu/cse/siis/coal/arguments/Field.class
 edu/psu/cse/siis/coal/Main5COAL.class
 edu/psu/cse/siis/coal/values/PathValue.class

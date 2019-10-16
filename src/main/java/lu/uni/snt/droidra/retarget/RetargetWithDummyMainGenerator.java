@@ -21,27 +21,27 @@ public class RetargetWithDummyMainGenerator
 		retargetWithDummyMainGeneration(apkPath, androidJar, outputDir, null, true);
 	}
 	
-	public static void retargetWithDummyMainGeneration(String apkPath, String androidJar, String outputDir, String[] additionalDexes) 
+	public static void retargetWithDummyMainGeneration(String apkPath, String androidJar, String outputDir, String[] additionalDexes)
 	{
 		retargetWithDummyMainGeneration(apkPath, androidJar, outputDir, additionalDexes, false);
 	}
-	
+
 	public static void retargetWithDummyMainGeneration(String apkPath, String androidJar, String outputDir, String[] additionalDexes, boolean outjar) {
 		/*try
 		{
 			FileUtils.cleanDirectory(new File(outputDir));
-		} 
-		catch (IOException e) 
-		{	
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
-		
+
 		String appName = apkPath;
 		if (appName.contains("/"))
 		{
 			appName = appName.substring(appName.lastIndexOf('/')+1);
 		}
-		
+
 		G.reset();
 		
 		String[] args2 =
