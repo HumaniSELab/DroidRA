@@ -223,12 +223,12 @@ public class Main
 //		ArrayVarItemTypeRef.setup(GlobalRef.apkPath, GlobalRef.clsPath);
 //		GlobalRef.arrayTypeRef = ArrayVarItemTypeRef.arrayTypeRef;
 
-//		SootStmtRef.setup(GlobalRef.apkPath, GlobalRef.clsPath);
-//		GlobalRef.classParamTypesKeyMethodValueMap = SootStmtRef.classParamTypesKeyMethodValueMap;
-//		GlobalRef.nameParamTypesKeyClassValueMap = SootStmtRef.nameParamTypesKeyClassValueMap;
-//		GlobalRef.classMethodParamTypesKeyStringMap = SootStmtRef.classMethodParamTypesKeyStringMap;
-//		GlobalRef.paramTypesKeySetMap = SootStmtRef.paramTypesKeySetMap;
-//		GlobalRef.classNameFieldTypesMap = SootStmtRef.classNameFieldTypesMap;
+		SootStmtRef.setup(GlobalRef.apkPath, GlobalRef.clsPath);
+		GlobalRef.classParamTypesKeyMethodValueMap = SootStmtRef.classParamTypesKeyMethodValueMap;
+		GlobalRef.nameParamTypesKeyClassValueMap = SootStmtRef.nameParamTypesKeyClassValueMap;
+		GlobalRef.classMethodParamTypesKeyStringMap = SootStmtRef.classMethodParamTypesKeyStringMap;
+		GlobalRef.paramTypesKeySetMap = SootStmtRef.paramTypesKeySetMap;
+		GlobalRef.classNameFieldTypesMap = SootStmtRef.classNameFieldTypesMap;
 
 		DroidRAAnalysis<DefaultCommandLineArguments> analysis = new DroidRAAnalysis<>();
 		DefaultCommandLineParser parser = new DefaultCommandLineParser();
