@@ -142,25 +142,25 @@ public class DummyMainGenerator extends SceneTransformer {
 
 	public SootMethod generateMain(Set<String> components)
 	{
-		SootMethod mainMethod = new SootMethod(DUMMY_METHOD_NAME, 
-				Arrays.asList(new Type[] {ArrayType.v(RefType.v("java.lang.String"), 1)}), 
-    			VoidType.v(), 
+		SootMethod mainMethod = new SootMethod(DUMMY_METHOD_NAME,
+				Arrays.asList(new Type[] {ArrayType.v(RefType.v("java.lang.String"), 1)}),
+    			VoidType.v(),
     			Modifier.PUBLIC | Modifier.STATIC);
     	JimpleBody body = Jimple.v().newBody(mainMethod);
     	mainMethod.setActiveBody(body);
-    	
+
     	SootClass sootClass = new SootClass(DUMMY_CLASS_NAME);
     	sootClass.setSuperclass(Scene.v().getSootClass("java.lang.Object"));
     	//sootClass.setPhantom(false);
     	sootClass.setApplicationClass();
     	sootClass.setInScene(true);
-    	
+
     	sootClass.addMethod(mainMethod);
 
     	LocalGenerator generator = new LocalGenerator(body);
 
     	body.insertIdentityStmts();
-    	
+
 		for (String str : components)
 		{
 			SootClass sc = Scene.v().getSootClass(str);
@@ -168,7 +168,7 @@ public class DummyMainGenerator extends SceneTransformer {
 			{
 				continue;
 			}
-			
+
 			//SootMethod method = ICCDummyMainCreator.v().generateDummyMainMethod(str);
 			// TODO: 13/10/19 change  ICCDummyMainCreator to createEntryPointCreator in order to detect fragment in activity
 			entryPointCreator = createEntryPointCreator(sc);
@@ -176,61 +176,61 @@ public class DummyMainGenerator extends SceneTransformer {
 
 			SootClass cls = method.getDeclaringClass();
 			SootMethod sootMethod = cls.getMethod("<init>", new ArrayList<Type>());
-			
+
 			if (null == sootMethod)
 			{
 				throw new RuntimeException("No default constructor for comp " + cls.getName());
 			}
-			
+
 			Local al = generator.generateLocal(cls.getType());
 			Unit newU = (Unit) Jimple.v().newAssignStmt(al, Jimple.v().newNewExpr(cls.getType()));
-			
+
 			Unit initU = (Unit) Jimple.v().newInvokeStmt(
 					Jimple.v().newSpecialInvokeExpr(al, sootMethod.makeRef()));
-			
+
 			Unit callU = (Unit) Jimple.v().newInvokeStmt(
 					Jimple.v().newSpecialInvokeExpr(al, method.makeRef()));
-			
+
 			body.getUnits().add(newU);
 			body.getUnits().add(initU);
 			body.getUnits().add(callU);
 		}
-		
+
 		body.getUnits().add(Jimple.v().newReturnVoidStmt());
-		
+
 		if (fullMethodCover)
 		{
 			mainMethod = appendNonComponents(mainMethod);
 		}
-		
+
 		System.out.println(body);
-		
+
 		body.validate();
-		
+
 		return mainMethod;
 	}
-	
-	
+
+
 	public SootMethod appendNonComponents(SootMethod mainMethod)
 	{
 		Set<String> coveredMethods = new HashSet<String>();
-		
+
 		CallGraph cg = Scene.v().getCallGraph();
-		
+
 		for (Iterator<Edge> iter = cg.iterator(); iter.hasNext(); )
 		{
 			Edge edge = iter.next();
-			
+
 			coveredMethods.add(edge.src().getSignature());
 			coveredMethods.add(edge.tgt().getSignature());
 		}
-		
+
 		Chain<SootClass> sootClasses = Scene.v().getApplicationClasses();
-		
+
 		for (Iterator<SootClass> iter = sootClasses.iterator(); iter.hasNext();)
 		{
 			SootClass sc = iter.next();
-			
+
 			List<SootMethod> methodList = sc.getMethods();
 			for (SootMethod sm : methodList)
 			{
@@ -238,59 +238,59 @@ public class DummyMainGenerator extends SceneTransformer {
 				{
 					continue;
 				}
-				
+
 				if (sc.isPhantom() || ! sm.isConcrete())
 				{
 					continue;
 				}
-				
+
 				if (sm.getName().equals("<init>") || sm.getName().equals("<clinit>"))
 				{
 					continue;
 				}
 
-				
-				
+
+
 				if (coveredMethods.contains(sm.getSignature()))
 				{
 					//Already covered.
 					continue;
 				}
-				
+
 				mainMethod = addMethod(mainMethod, sm.getSignature());
 			}
 		}
-		
+
 		return mainMethod;
 	}
-	
+
 	public SootMethod addMethod(SootMethod mainMethod, String methodSignature)
 	{
 		Body body = mainMethod.getActiveBody();
-    	
+
 		Stmt returnStmt = null;
-		
+
     	PatchingChain<Unit> units = body.getUnits();
     	for (Iterator<Unit> iter = units.snapshotIterator(); iter.hasNext(); )
     	{
     		Stmt stmt = (Stmt) iter.next();
-    		
+
     		if (stmt instanceof ReturnStmt || stmt instanceof ReturnVoidStmt)
     		{
     			returnStmt = stmt;
     		}
     	}
-    	
+
     	SootMethod sm = Scene.v().getMethod(methodSignature);
-    	
+
     	List<Type> paramTypes = sm.getParameterTypes();
     	List<Value> paramValues = new ArrayList<Value>();
     	for (int i = 0; i < paramTypes.size(); i++)
     	{
     		paramValues.add(InstrumentationUtils.toDefaultSootTypeValue(paramTypes.get(i)));
     	}
-    	
-    	
+
+
     	if (sm.isStatic())    //No need to construct its obj ref
     	{
     		InvokeExpr expr = Jimple.v().newStaticInvokeExpr(sm.makeRef(), paramValues);
@@ -300,39 +300,39 @@ public class DummyMainGenerator extends SceneTransformer {
     	else
     	{
     		//new obj first and then call the method
-    		
+
     		SootClass sc = sm.getDeclaringClass();
     		List<SootMethod> methods = sc.getMethods();
 
     		SootMethod init = null;
     		SootMethod clinit = null;
-    		
+
     		for (SootMethod method : methods)
     		{
     			if (method.getName().equals("<clinit>"))
     			{
     				clinit = method;
     			}
-    			
+
     			if (method.getName().equals("<init>"))
     			{
     				init = method;
     			}
     		}
-    		
+
     		LocalGenerator localGenerator = new LocalGenerator(body);
-    		
+
     		Local obj = localGenerator.generateLocal(sc.getType());
-    		
-    		Unit newU = Jimple.v().newAssignStmt(obj, Jimple.v().newNewExpr(sc.getType())); 
+
+    		Unit newU = Jimple.v().newAssignStmt(obj, Jimple.v().newNewExpr(sc.getType()));
     		units.insertBefore(newU, returnStmt);
-    		
+
     		if (null != clinit)
     		{
     			Unit clinitCallU = Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(clinit.makeRef()));
     			units.insertBefore(clinitCallU, returnStmt);
     		}
-    		
+
     		if (null != init)
     		{
     			List<Type> initParamTypes = init.getParameterTypes();
@@ -341,7 +341,7 @@ public class DummyMainGenerator extends SceneTransformer {
     	    	{
     	    		initParamValues.add(InstrumentationUtils.toDefaultSootTypeValue(initParamTypes.get(i)));
     	    	}
-    	    	
+
     	    	Unit initCallU = Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr(obj, init.makeRef(), initParamValues));
     	    	units.insertBefore(initCallU, returnStmt);
     		}
@@ -350,13 +350,13 @@ public class DummyMainGenerator extends SceneTransformer {
     			throw new RuntimeException("Is it possible that a class does not contain an <init> method?");
     		}
     	}
-    	
+
     	System.out.println(body);
     	body.validate();
-    	
+
     	return mainMethod;
 	}
-    
+
 	public SootMethod generateFuzzyMethod(SootClass sootClass)
 	{
     	String name = "fuzzyMe";
@@ -365,19 +365,19 @@ public class DummyMainGenerator extends SceneTransformer {
 	    int modifiers = Modifier.PUBLIC;
 	    SootMethod fuzzyMeMethod = new SootMethod(name, parameters, returnType, modifiers);
 	    sootClass.addMethod(fuzzyMeMethod);
-	    
+
 	    {
 	    	Body b = Jimple.v().newBody(fuzzyMeMethod);
 	    	fuzzyMeMethod.setActiveBody(b);
 	    	LocalGenerator lg = new LocalGenerator(b);
 	        Local thisLocal = lg.generateLocal(sootClass.getType());
-	        Unit thisU = Jimple.v().newIdentityStmt(thisLocal, 
+	        Unit thisU = Jimple.v().newIdentityStmt(thisLocal,
 	                Jimple.v().newThisRef(sootClass.getType()));
 	        Unit returnU = Jimple.v().newReturnStmt(IntConstant.v(1));
 	        b.getUnits().add(thisU);
 	        b.getUnits().add(returnU);
 	    }
-	        
+
 	    return fuzzyMeMethod;
 	}
 
@@ -980,17 +980,8 @@ public class DummyMainGenerator extends SceneTransformer {
 
 	@Override
 	protected void internalTransform(String phaseName, Map<String, String> options) {
-		try {
-			ProcessManifest processManifest = new ProcessManifest(apkFileLocation);
-			Set<String> entryPoints = processManifest.getEntryPointClasses();
+		//Scene.v().addClass(GlobalRef.dummyMainClass);
 
-			SootMethod mainMethod = generateMain(entryPoints);
-
-			System.out.println(mainMethod.getActiveBody());
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XmlPullParserException e) {
-			e.printStackTrace();
-		}
+		System.out.println(Scene.v().getSootClass("dummyMainClass"));
 	}
 }

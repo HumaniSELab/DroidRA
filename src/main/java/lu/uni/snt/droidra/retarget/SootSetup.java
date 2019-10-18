@@ -32,7 +32,7 @@ public class SootSetup {
         G.reset();
 
         config.setWriteOutputFiles(true);
-        //Options.v().set_no_bodies_for_excluded(true);
+        Options.v().set_no_bodies_for_excluded(true);
         Options.v().set_allow_phantom_refs(true);
         if (config.getWriteOutputFiles())
             Options.v().set_output_format(Options.output_format_class);
