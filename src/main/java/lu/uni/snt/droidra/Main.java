@@ -16,11 +16,9 @@ import lu.uni.snt.droidra.retarget.SootSetup;
 import lu.uni.snt.droidra.typeref.ArrayVarItemTypeRef;
 import lu.uni.snt.droidra.typeref.soot.SootStmtRef;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.xmlpull.v1.XmlPullParserException;
-import soot.G;
-import soot.Scene;
-import soot.SootClass;
-import soot.SootMethod;
+import soot.*;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
 import soot.jimple.infoflow.android.resources.LayoutFileParser;
 
@@ -119,14 +117,7 @@ public class Main
 		}
 
 		try {
-			SootStmtRef.setup(apkPath, forceAndroidJar);
-			GlobalRef.classParamTypesKeyMethodValueMap = SootStmtRef.classParamTypesKeyMethodValueMap;
-			GlobalRef.nameParamTypesKeyClassValueMap = SootStmtRef.nameParamTypesKeyClassValueMap;
-			GlobalRef.classMethodParamTypesKeyStringMap = SootStmtRef.classMethodParamTypesKeyStringMap;
-			GlobalRef.paramTypesKeySetMap = SootStmtRef.paramTypesKeySetMap;
-			GlobalRef.classNameFieldTypesMap = SootStmtRef.classNameFieldTypesMap;
-
-			calculateEntryPoint(apkPath, forceAndroidJar);
+			calculateEntryPoint(apkPath, forceAndroidJar, GlobalRef.WORKSPACE);
 		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
 			System.out.println("==>calculateEntryPoint error:" + e);
@@ -160,14 +151,14 @@ public class Main
 	/**
 	 * calculate Entry Point in the given APK file.
 	 */
-	public static void calculateEntryPoint(String apkPath, String forceAndroidJar) throws IOException, XmlPullParserException {
+	public static void calculateEntryPoint(String apkPath, String forceAndroidJar, String outputDir) throws IOException, XmlPullParserException {
 		DummyMainGenerator dummyMainGenerator = new DummyMainGenerator(apkPath);
 		InfoflowAndroidConfiguration config = dummyMainGenerator.config;
 		// sunxiaobiu: 14/10/19 you can modify your own config by changing "config" parameters
 		config.getAnalysisFileConfig().setTargetAPKFile(apkPath);
 		config.getAnalysisFileConfig().setAndroidPlatformDir(forceAndroidJar);
+		config.setWriteOutputFiles(true);
 
-		G.reset();
 		SootSetup.initializeSoot(config, forceAndroidJar);
 
 		DroidRAUtils.extractApkInfo(apkPath);
@@ -176,16 +167,16 @@ public class Main
 		if (config.getCallbackConfig().getEnableCallbacks()) {
 			dummyMainGenerator.parseAppResources();
 			LayoutFileParser lfp = dummyMainGenerator.createLayoutFileParser();
-				switch (config.getCallbackConfig().getCallbackAnalyzer()) {
-					case Fast:
-						dummyMainGenerator.calculateCallbackMethodsFast(lfp, null);
-						break;
-					case Default:
-						dummyMainGenerator.calculateCallbackMethods(lfp, null);
-						break;
-					default:
-						throw new RuntimeException("Unknown callback analyzer");
-				}
+			switch (config.getCallbackConfig().getCallbackAnalyzer()) {
+				case Fast:
+					dummyMainGenerator.calculateCallbackMethodsFast(lfp, null);
+					break;
+				case Default:
+					dummyMainGenerator.calculateCallbackMethods(lfp, null);
+					break;
+				default:
+					throw new RuntimeException("Unknown callback analyzer");
+			}
 
 		} else {
 			// Create the new iteration of the main method
@@ -193,16 +184,17 @@ public class Main
 			dummyMainGenerator.constructCallgraphInternal();
 		}
 
-
 		SootClass originSootClass = Scene.v().getSootClass("dummyMainClass");
 		if(CollectionUtils.isNotEmpty(originSootClass.getMethods())){
 			for(int i = 0; i < originSootClass.getMethods().size(); i++){
 				if(originSootClass.getMethods().get(i).getName().equals("dummyMainMethod")){
 					originSootClass.getMethods().get(i).setName("main");
+					GlobalRef.dummyMainMethod = originSootClass.getMethods().get(i);
+					GlobalRef.dummyMainClass = originSootClass;
 				}
 			}
 		}
-
+		PackManager.v().writeOutput();
 	}
 
 	public static void init(String apkPath, String forceAndroidJar, String additionalDexes)
@@ -225,11 +217,18 @@ public class Main
 		String[] args = {
 			"-cp", GlobalRef.clsPath,
 			"-model", GlobalRef.coalModelPath,
-			"-input", GlobalRef.WORKSPACE
+			"-input", GlobalRef.SOOTOUTPUT
 		};
 
 //		ArrayVarItemTypeRef.setup(GlobalRef.apkPath, GlobalRef.clsPath);
 //		GlobalRef.arrayTypeRef = ArrayVarItemTypeRef.arrayTypeRef;
+
+//		SootStmtRef.setup(GlobalRef.apkPath, GlobalRef.clsPath);
+//		GlobalRef.classParamTypesKeyMethodValueMap = SootStmtRef.classParamTypesKeyMethodValueMap;
+//		GlobalRef.nameParamTypesKeyClassValueMap = SootStmtRef.nameParamTypesKeyClassValueMap;
+//		GlobalRef.classMethodParamTypesKeyStringMap = SootStmtRef.classMethodParamTypesKeyStringMap;
+//		GlobalRef.paramTypesKeySetMap = SootStmtRef.paramTypesKeySetMap;
+//		GlobalRef.classNameFieldTypesMap = SootStmtRef.classNameFieldTypesMap;
 
 		DroidRAAnalysis<DefaultCommandLineArguments> analysis = new DroidRAAnalysis<>();
 		DefaultCommandLineParser parser = new DefaultCommandLineParser();

@@ -1,8 +1,8 @@
 package lu.uni.snt.droidra.retarget;
 
 import heros.solver.Pair;
+import lu.uni.snt.droidra.GlobalRef;
 import lu.uni.snt.droidra.booster.InstrumentationUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParserException;
@@ -42,7 +42,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 
-public class DummyMainGenerator {
+public class DummyMainGenerator extends SceneTransformer {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -978,4 +978,19 @@ public class DummyMainGenerator {
 	}
 
 
+	@Override
+	protected void internalTransform(String phaseName, Map<String, String> options) {
+		try {
+			ProcessManifest processManifest = new ProcessManifest(apkFileLocation);
+			Set<String> entryPoints = processManifest.getEntryPointClasses();
+
+			SootMethod mainMethod = generateMain(entryPoints);
+
+			System.out.println(mainMethod.getActiveBody());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+		}
+	}
 }

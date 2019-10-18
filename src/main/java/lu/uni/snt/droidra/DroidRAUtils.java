@@ -1,16 +1,19 @@
 package lu.uni.snt.droidra;
 
 import lu.uni.snt.droidra.retarget.RetargetWithDummyMainGenerator;
+import org.xmlpull.v1.XmlPullParserException;
 import soot.jimple.infoflow.android.manifest.ProcessManifest;
+
+import java.io.IOException;
 
 public class DroidRAUtils 
 {
 	public static void main(String[] args)
 	{
-		RetargetWithDummyMainGenerator.retargetWithDummyMainGeneration("/Users/li.li/Project/apktool/apks/com.for2w.appshare.apk", 
-				"/Users/li.li/Project/github/android-platforms/android-18/android.jar", 
-				"workspace");
-		
+			RetargetWithDummyMainGenerator.retargetWithDummyMainGeneration("/Users/li.li/Project/apktool/apks/com.for2w.appshare.apk",
+					"/Users/li.li/Project/github/android-platforms/android-18/android.jar",
+					"workspace", null);
+
 		//DroidRAUtils.initArrayVarMap("workspace", "/Users/li.li/Project/github/android-platforms/android-18/android.jar");
 	}
 	

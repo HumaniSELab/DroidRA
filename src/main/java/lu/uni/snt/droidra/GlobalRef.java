@@ -26,6 +26,7 @@ public class GlobalRef
 	
 	//Configuration files
 	public static final String WORKSPACE = "workspace";
+	public static final String SOOTOUTPUT = "sootOutput";
 	public static String fieldCallsConfigPath = "res/FieldCalls.txt";
 	//public static String coalModelPath = "res/reflection.model";
 	public static String coalModelPath = "res/reflection_simple.model";
@@ -51,5 +52,8 @@ public class GlobalRef
 	public static Map<String, Set<FieldTypesValue>> classNameFieldTypesMap;
 
 	public static final String jsonFile = "refl.json";
+
+	public static SootMethod dummyMainMethod = null;
+	public static SootClass dummyMainClass = null;
 
 }

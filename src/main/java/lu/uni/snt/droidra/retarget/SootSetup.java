@@ -3,9 +3,7 @@ package lu.uni.snt.droidra.retarget;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import soot.G;
-import soot.PackManager;
-import soot.Scene;
+import soot.*;
 import soot.jimple.infoflow.AbstractInfoflow;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
 import soot.jimple.infoflow.cfg.LibraryClassPatcher;
@@ -13,6 +11,8 @@ import soot.options.Options;
 
 import java.io.File;
 import java.util.Collections;
+
+import static soot.SootClass.HIERARCHY;
 
 public class SootSetup {
 
@@ -31,21 +31,26 @@ public class SootSetup {
         // Clean up any old Soot instance we may have
         G.reset();
 
-        Options.v().set_no_bodies_for_excluded(true);
+        config.setWriteOutputFiles(true);
+        //Options.v().set_no_bodies_for_excluded(true);
         Options.v().set_allow_phantom_refs(true);
         if (config.getWriteOutputFiles())
-            Options.v().set_output_format(Options.output_format_jimple);
+            Options.v().set_output_format(Options.output_format_class);
         else
             Options.v().set_output_format(Options.output_format_none);
         Options.v().set_whole_program(true);
         Options.v().set_process_dir(Collections.singletonList(apkFileLocation));
         Options.v().set_force_android_jar(forceAndroidJar);
-        Options.v().set_src_prec(Options.src_prec_apk_class_jimple);
-        Options.v().set_keep_line_number(false);
+        Options.v().set_src_prec(Options.src_prec_apk);
+        Options.v().set_keep_line_number(true);
         Options.v().set_keep_offset(false);
         Options.v().set_throw_analysis(Options.throw_analysis_dalvik);
         Options.v().set_process_multiple_dex(config.getMergeDexFiles());
         Options.v().set_ignore_resolution_errors(true);
+
+//        Options.v().set_verbose(true);
+//        PhaseOptions.v().setPhaseOption("cg", "enabled:true");
+//        PhaseOptions.v().setPhaseOption("wjtp.rdc", "enabled:true");
 
         Options.v().set_soot_classpath(getClasspath(config));
         soot.Main.v().autoSetOptions();
