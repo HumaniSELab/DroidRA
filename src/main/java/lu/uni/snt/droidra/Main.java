@@ -164,6 +164,15 @@ public class Main
 
 		SootSetup.initializeSoot(config, forceAndroidJar);
 
+		try
+		{
+			FileUtils.cleanDirectory(new File(GlobalRef.SOOTOUTPUT));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
 		//collect all Dynamic loaded Fragments
 		collectDynamicFragments();
 
