@@ -3,6 +3,7 @@ package lu.uni.snt.droidra.retarget;
 import heros.solver.Pair;
 import lu.uni.snt.droidra.GlobalRef;
 import lu.uni.snt.droidra.booster.InstrumentationUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParserException;
@@ -878,6 +879,18 @@ public class DummyMainGenerator extends SceneTransformer {
 
 					// Add the fragments for this class
 					Set<SootClass> fragments = lfp.getFragments().get(layoutFileName);
+
+					if(CollectionUtils.isNotEmpty(GlobalRef.dynamicFragment)){
+						if(fragments == null){
+							fragments = GlobalRef.dynamicFragment;
+						}else{
+							Set<SootClass> newFragments = new HashSet<>();
+							newFragments.addAll(fragments);
+							newFragments.addAll(GlobalRef.dynamicFragment);
+							fragments = newFragments;
+						}
+					}
+
 					if (fragments != null)
 						for (SootClass fragment : fragments)
 							if (fragmentClasses.put(callbackClass, fragment))

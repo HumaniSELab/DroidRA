@@ -15,18 +15,21 @@ import lu.uni.snt.droidra.retarget.RetargetWithDummyMainGenerator;
 import lu.uni.snt.droidra.retarget.SootSetup;
 import lu.uni.snt.droidra.typeref.ArrayVarItemTypeRef;
 import lu.uni.snt.droidra.typeref.soot.SootStmtRef;
+import lu.uni.snt.droidra.util.ApplicationClassFilter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import soot.*;
+import soot.javaToJimple.LocalGenerator;
+import soot.jimple.Jimple;
+import soot.jimple.Stmt;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
+import soot.jimple.infoflow.android.iccta.MessageHandler;
 import soot.jimple.infoflow.android.resources.LayoutFileParser;
+import soot.util.Chain;
 
 import java.io.*;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * at soot.toDex.PrimitiveType.getByName(PrimitiveType.java:24)
@@ -160,6 +163,9 @@ public class Main
 		config.setWriteOutputFiles(true);
 
 		SootSetup.initializeSoot(config, forceAndroidJar);
+
+		//collect all Dynamic loaded Fragments
+		collectDynamicFragments();
 
 		DroidRAUtils.extractApkInfo(apkPath);
 		GlobalRef.clsPath = forceAndroidJar;
@@ -323,5 +329,39 @@ public class Main
 			e.printStackTrace();
 		}
 	}
+
+	public static void collectDynamicFragments(){
+		Set<SootClass> dynamicFragment = new HashSet<>();
+		Chain<SootClass> applicationClasses = Scene.v().getApplicationClasses();
+		for (Iterator<SootClass> iter = applicationClasses.snapshotIterator(); iter.hasNext(); ) {
+			SootClass sootClass = iter.next();
+
+			// We copy the list of methods to emulate a snapshot iterator which
+			// doesn't exist for methods in Soot
+			List<SootMethod> methodCopyList = new ArrayList<>(sootClass.getMethods());
+			for (SootMethod sootMethod : methodCopyList) {
+				if (sootMethod.isConcrete()) {
+					final Body body = sootMethod.retrieveActiveBody();
+					final LocalGenerator lg = new LocalGenerator(body);
+
+					for (Iterator<Unit> unitIter = body.getUnits().snapshotIterator(); unitIter.hasNext(); ) {
+						Stmt stmt = (Stmt) unitIter.next();
+
+						if (stmt.containsInvokeExpr()) {
+							SootMethod callee = stmt.getInvokeExpr().getMethod();
+
+							// For Messenger.send(), we directly call the respective handler
+							if (callee ==  Scene.v().grabMethod("<android.support.v4.app.FragmentTransaction: android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment)>")) {
+								System.out.println(callee);
+								dynamicFragment.add(Scene.v().getSootClass(stmt.getInvokeExpr().getArgBox(1).getValue().getType().toString()));
+							}
+						}
+					}
+				}
+			}
+		}
+		GlobalRef.dynamicFragment.addAll(dynamicFragment);
+	}
+
 
 }

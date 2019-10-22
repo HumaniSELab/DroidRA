@@ -10,8 +10,7 @@ import lu.uni.snt.droidra.typeref.soot.methodrelated.*;
 import soot.SootClass;
 import soot.SootMethod;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GlobalRef 
 {
@@ -55,5 +54,5 @@ public class GlobalRef
 
 	public static SootMethod dummyMainMethod = null;
 	public static SootClass dummyMainClass = null;
-
+	public static Set<SootClass> dynamicFragment = new HashSet<>();
 }
