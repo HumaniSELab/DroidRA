@@ -352,8 +352,12 @@ public class Main
 
 							// For Messenger.send(), we directly call the respective handler
 							if (callee ==  Scene.v().grabMethod("<android.support.v4.app.FragmentTransaction: android.support.v4.app.FragmentTransaction add(int,android.support.v4.app.Fragment)>")) {
-								System.out.println(callee);
-								dynamicFragment.add(Scene.v().getSootClass(stmt.getInvokeExpr().getArgBox(1).getValue().getType().toString()));
+
+								SootClass fragmentClass = Scene.v().getSootClass(stmt.getInvokeExpr().getArgBox(1).getValue().getType().toString());
+								if(ApplicationClassFilter.isApplicationClass(fragmentClass)){
+									System.out.println(callee);
+									dynamicFragment.add(Scene.v().getSootClass(stmt.getInvokeExpr().getArgBox(1).getValue().getType().toString()));
+								}
 							}
 						}
 					}
