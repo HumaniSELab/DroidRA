@@ -126,7 +126,7 @@ public class Main
 			System.out.println("==>calculateEntryPoint error:" + e);
 		}
 		// sunxiaobiu: 14/10/19 change init to new FlowDroid Setup Method
-		init(apkPath, forceAndroidJar, dexes);
+		//init(apkPath, forceAndroidJar, dexes);
 		
 		long afterDummyMain = System.currentTimeMillis();
 		System.out.println("==>TIME:" + afterDummyMain);
