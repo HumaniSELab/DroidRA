@@ -26,6 +26,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import lu.uni.snt.droidra.retarget.SootSetup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import soot.PackManager;
 import edu.psu.cse.siis.coal.lang.ParseException;
 
@@ -46,6 +49,8 @@ import edu.psu.cse.siis.coal.lang.ParseException;
  * @param <A> A generic {@link CommandLineArguments} type for command line arguments.
  */
 public abstract class Analysis<A extends CommandLineArguments> {
+  private static final Logger logger = LoggerFactory.getLogger(Analysis.class);
+
   /**
    * Pattern method to perform the analysis.
    * 
@@ -71,6 +76,9 @@ public abstract class Analysis<A extends CommandLineArguments> {
       finalizeAnalysis(commandLineArguments);
     } catch (FatalAnalysisException e) {
       handleFatalAnalysisException(commandLineArguments, e);
+    } catch (java.lang.NoSuchMethodError me){
+      System.out.println("NoSuchMethodError:"+me);
+      logger.error("NoSuchMethodError::"+me);
     }
   }
 

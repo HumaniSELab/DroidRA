@@ -24,6 +24,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import soot.Body;
 import soot.Scene;
 import soot.SceneTransformer;
 import soot.SootMethod;
@@ -67,7 +68,8 @@ public class PropagationSceneTransformer extends SceneTransformer {
     PropagationProblem problem = new PropagationProblem(iCfg);
     for (SootMethod ep : Scene.v().getEntryPoints()) {
       if (ep.isConcrete()) {
-        problem.getInitialSeeds().add(ep.getActiveBody().getUnits().getFirst());
+        Body b = ep.getActiveBody();
+        problem.getInitialSeeds().add(b.getUnits().getFirst());
       }
     }
 

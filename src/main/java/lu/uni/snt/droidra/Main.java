@@ -164,6 +164,12 @@ public class Main
 
 		SootSetup.initializeSoot(config, forceAndroidJar);
 
+		if (! new File(GlobalRef.SOOTOUTPUT).exists())
+		{
+			File sootOutput = new File(GlobalRef.SOOTOUTPUT);
+			sootOutput.mkdirs();
+		}
+
 		try
 		{
 			FileUtils.cleanDirectory(new File(GlobalRef.SOOTOUTPUT));

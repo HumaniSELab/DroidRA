@@ -1,0 +1,171 @@
+The following values were found:
+*****Result*****
+android.animation.PropertyValuesHolder$FloatPropertyValuesHolder/void setAnimatedValue(java.lang.Object) : virtualinvoke $r10.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r1, $r9)
+    -1 : top
+
+android.animation.PropertyValuesHolder$IntPropertyValuesHolder/void setAnimatedValue(java.lang.Object) : virtualinvoke $r10.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r1, $r9)
+    -1 : top
+
+android.animation.PropertyValuesHolder/java.lang.reflect.Method getPropertyFunction(java.lang.Class,java.lang.String,java.lang.Class) : r10 = virtualinvoke r1.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>(r4, null)
+    0 : [, (.*)(.*)(.*), (.*), (.*)(.*)]
+
+android.animation.PropertyValuesHolder/java.lang.reflect.Method getPropertyFunction(java.lang.Class,java.lang.String,java.lang.Class) : r31 = virtualinvoke r1.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>(r4, r5)
+    0 : [, (.*)(.*)(.*), (.*), (.*)(.*)]
+
+android.animation.PropertyValuesHolder/void setupSetterAndGetter(java.lang.Object) : $r18 = virtualinvoke $r17.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r1, $r16)
+    -1 : top
+
+android.os.Parcel/android.os.Parcelable readParcelable(java.lang.ClassLoader) : $r18 = virtualinvoke r68.<java.lang.Class: java.lang.reflect.Field getField(java.lang.String)>("CREATOR")
+    0 : [CREATOR]
+
+android.os.Parcel/android.os.Parcelable readParcelable(java.lang.ClassLoader) : $r19 = virtualinvoke $r18.<java.lang.reflect.Field: java.lang.Object get(java.lang.Object)>(null)
+    -1 : Value: 1 path values
+  declaringClass_field=(.*), name_field=CREATOR, 
+
+
+android.os.Parcel/android.os.Parcelable readParcelable(java.lang.ClassLoader) : r68 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r2)
+    0 : [(.*)]
+
+android.os.Parcel/android.os.Parcelable readParcelable(java.lang.ClassLoader) : r9 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String,boolean,java.lang.ClassLoader)>(r2, 1, r1)
+    0 : [(.*)]
+
+com.android.internal.policy.PolicyManager/void <clinit>() : $r3 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>("com.android.internal.policy.impl.Policy")
+    0 : [com.android.internal.policy.impl.Policy]
+
+com.android.internal.policy.PolicyManager/void <clinit>() : $r4 = virtualinvoke $r3.<java.lang.Class: java.lang.Object newInstance()>()
+    -1 : Value: 1 path values
+  name_class=com.android.internal.policy.impl.Policy, 
+
+
+com.facebook.Settings/java.util.concurrent.Executor getAsyncTaskExecutor() : r4 = virtualinvoke r3.<java.lang.Class: java.lang.reflect.Field getField(java.lang.String)>("THREAD_POOL_EXECUTOR")
+    0 : [THREAD_POOL_EXECUTOR]
+
+com.facebook.Settings/java.util.concurrent.Executor getAsyncTaskExecutor() : r5 = virtualinvoke r4.<java.lang.reflect.Field: java.lang.Object get(java.lang.Object)>(null)
+    -1 : Value: 1 path values
+  declaringClass_field=Landroid/os/AsyncTask;, name_field=THREAD_POOL_EXECUTOR, 
+
+
+com.facebook.SharedPreferencesTokenCachingStrategy/void deserializeKey(java.lang.String,android.os.Bundle) : $r5 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>($r4)
+    0 : [NULL-CONSTANT, (.*)]
+
+com.facebook.unity.FBUnityDeepLinkingActivity/java.lang.Class getMainActivityClass() : r7 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>($r3)
+    0 : [(.*)]
+
+java.lang.Class/java.lang.Class forName(java.lang.String) : $r2 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String,boolean,java.lang.ClassLoader)>(r0, 1, $r1)
+    0 : [twitter4j.internal.logging.Log4JLoggerFactory, com.google.appengine.api.urlfetch.URLFetchService, twitter4j.internal.logging.CommonsLoggingLoggerFactory, com.android.internal.policy.impl.Policy, NULL-CONSTANT, org.slf4j.impl.StaticLoggerBinder, twitter4j.internal.logging.JULLoggerFactory, org.apache.log4j.Logger, org.apache.commons.logging.impl.WeakHashtable, twitter4j.internal.http.alternative.HttpClientImpl, dalvik.system.VMRuntime, twitter4j.conf.PropertyConfigurationFactory, (.*), twitter4j.AppEngineTwitterImpl, twitter4j.TwitterImpl, org.apache.commons.logging.Log, twitter4j.internal.logging.SLF4JLoggerFactory, twitter4j.internal.http.HttpClientImpl]
+
+java.lang.Void/java.lang.Class lookupType() : $r4 = virtualinvoke $r3.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>("run", $r2)
+    0 : [run]
+
+org.apache.commons.logging.LogFactory/java.util.Hashtable createFactoryStore() : $r1 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r7)
+    0 : [org.apache.commons.logging.impl.WeakHashtable, (.*)]
+
+org.apache.commons.logging.LogFactory/java.util.Hashtable createFactoryStore() : $r2 = virtualinvoke $r1.<java.lang.Class: java.lang.Object newInstance()>()
+    -1 : Value: 2 path values
+  name_class=(.*), 
+  name_class=org.apache.commons.logging.impl.WeakHashtable, 
+
+
+org.apache.http.impl.client.AbstractHttpClient/org.apache.http.conn.ClientConnectionManager createClientConnectionManager() : $r4 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r20)
+    0 : [(.*)]
+
+org.apache.http.impl.client.AbstractHttpClient/org.apache.http.conn.ClientConnectionManager createClientConnectionManager() : r21 = virtualinvoke $r4.<java.lang.Class: java.lang.Object newInstance()>()
+    -1 : Value: 1 path values
+  name_class=(.*), 
+
+
+org.apache.http.util.ExceptionUtils/java.lang.reflect.Method getInitCauseMethod() : r1 = virtualinvoke $r3.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>("initCause", $r2)
+    0 : [initCause]
+
+org.apache.http.util.ExceptionUtils/void initCause(java.lang.Throwable,java.lang.Throwable) : virtualinvoke $r5.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r0, $r4)
+    -1 : null
+
+org.xmlpull.v1.XmlPullParserFactory/org.xmlpull.v1.XmlPullParser newPullParser() : $r19 = virtualinvoke r2.<java.lang.Class: java.lang.Object newInstance()>()
+    -1 : top
+
+org.xmlpull.v1.XmlPullParserFactory/org.xmlpull.v1.XmlPullParserFactory newInstance(java.lang.String,java.lang.Class) : r21 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r4)
+    0 : [(.*)]
+
+org.xmlpull.v1.XmlPullParserFactory/org.xmlpull.v1.XmlPullParserFactory newInstance(java.lang.String,java.lang.Class) : r6 = virtualinvoke r21.<java.lang.Class: java.lang.Object newInstance()>()
+    -1 : Value: 1 path values
+  name_class=(.*), 
+
+
+twitter4j.TwitterFactory/twitter4j.Twitter getInstance(twitter4j.auth.Authorization) : r12 = virtualinvoke r1.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>(r2)
+    -1 : Value: 3 path values
+  declaringClass_constructor=NULL-CONSTANT, 
+  declaringClass_constructor=twitter4j.AppEngineTwitterImpl, 
+  declaringClass_constructor=twitter4j.TwitterImpl, 
+
+
+twitter4j.TwitterFactory/void <clinit>() : r19 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r18)
+    0 : [NULL-CONSTANT, twitter4j.AppEngineTwitterImpl, twitter4j.TwitterImpl]
+
+twitter4j.TwitterFactory/void <clinit>() : r24 = virtualinvoke r22.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>(r0)
+    -1 : Value: 3 path values
+  declaringClass_constructor=NULL-CONSTANT, 
+  declaringClass_constructor=twitter4j.AppEngineTwitterImpl, 
+  declaringClass_constructor=twitter4j.TwitterImpl, 
+
+
+twitter4j.TwitterFactory/void <clinit>() : staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>("twitter4j.AppEngineTwitterImpl")
+    0 : [twitter4j.AppEngineTwitterImpl]
+
+twitter4j.conf.ConfigurationBase/void <clinit>() : staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>("com.google.appengine.api.urlfetch.URLFetchService")
+    0 : [com.google.appengine.api.urlfetch.URLFetchService]
+
+twitter4j.conf.ConfigurationBase/void <clinit>() : staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>("dalvik.system.VMRuntime")
+    0 : [dalvik.system.VMRuntime]
+
+twitter4j.conf.ConfigurationContext/void <clinit>() : $r0 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r9)
+    0 : [twitter4j.conf.PropertyConfigurationFactory, (.*)]
+
+twitter4j.conf.ConfigurationContext/void <clinit>() : r10 = virtualinvoke $r0.<java.lang.Class: java.lang.Object newInstance()>()
+    -1 : Value: 2 path values
+  name_class=(.*), 
+  name_class=twitter4j.conf.PropertyConfigurationFactory, 
+
+
+twitter4j.conf.PropertyConfiguration/void <init>(java.lang.String) : $r24 = virtualinvoke $r23.<java.lang.Class: java.io.InputStream getResourceAsStream(java.lang.String)>("/twitter4j.properties")
+    0 : [/twitter4j.properties]
+
+twitter4j.conf.PropertyConfiguration/void <init>(java.lang.String) : $r26 = virtualinvoke $r25.<java.lang.Class: java.io.InputStream getResourceAsStream(java.lang.String)>("/WEB-INF/twitter4j.properties")
+    0 : [/WEB-INF/twitter4j.properties]
+
+twitter4j.internal.http.HttpClientFactory/twitter4j.internal.http.HttpClient getInstance(twitter4j.internal.http.HttpClientConfiguration) : r10 = virtualinvoke r0.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>(r1)
+    -1 : Value: 1 path values
+  declaringClass_constructor=(.*), 
+
+
+twitter4j.internal.http.HttpClientFactory/void <clinit>() : r6 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>("twitter4j.internal.http.HttpClientImpl")
+    0 : [twitter4j.internal.http.HttpClientImpl]
+
+twitter4j.internal.http.HttpClientFactory/void <clinit>() : r8 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r7)
+    0 : [(.*)]
+
+twitter4j.internal.http.HttpClientFactory/void <clinit>() : r9 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>("twitter4j.internal.http.alternative.HttpClientImpl")
+    0 : [twitter4j.internal.http.alternative.HttpClientImpl]
+
+twitter4j.internal.logging.Logger/twitter4j.internal.logging.LoggerFactory getLoggerFactoryIfAvailable(java.lang.String,java.lang.String) : $r2 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r0)
+    0 : [twitter4j.internal.logging.JULLoggerFactory, twitter4j.internal.logging.Log4JLoggerFactory, twitter4j.internal.logging.CommonsLoggingLoggerFactory, (.*), twitter4j.internal.logging.SLF4JLoggerFactory]
+
+twitter4j.internal.logging.Logger/twitter4j.internal.logging.LoggerFactory getLoggerFactoryIfAvailable(java.lang.String,java.lang.String) : r11 = virtualinvoke $r2.<java.lang.Class: java.lang.Object newInstance()>()
+    -1 : Value: 5 path values
+  name_class=(.*), 
+  name_class=twitter4j.internal.logging.CommonsLoggingLoggerFactory, 
+  name_class=twitter4j.internal.logging.JULLoggerFactory, 
+  name_class=twitter4j.internal.logging.Log4JLoggerFactory, 
+  name_class=twitter4j.internal.logging.SLF4JLoggerFactory, 
+
+
+twitter4j.internal.logging.Logger/twitter4j.internal.logging.LoggerFactory getLoggerFactoryIfAvailable(java.lang.String,java.lang.String) : staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>(r10)
+    0 : [org.apache.log4j.Logger, com.google.appengine.api.urlfetch.URLFetchService, org.slf4j.impl.StaticLoggerBinder, (.*), org.apache.commons.logging.Log]
+
+twitter4j.internal.logging.Logger/void <clinit>() : r11 = virtualinvoke r9.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>("dumpConfiguration", r10)
+    0 : [dumpConfiguration]
+
+twitter4j.internal.logging.Logger/void <clinit>() : virtualinvoke r11.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>(r7, r12)
+    -1 : Value: 1 path values
+  declaringClass_method=twitter4j.conf.Configuration, name_method=dumpConfiguration, 
+
+
