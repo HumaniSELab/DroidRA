@@ -18,6 +18,7 @@ import lu.uni.snt.droidra.typeref.soot.SootStmtRef;
 import lu.uni.snt.droidra.util.ApplicationClassFilter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.BasicConfigurator;
 import org.xmlpull.v1.XmlPullParserException;
 import soot.*;
 import soot.javaToJimple.LocalGenerator;
@@ -95,6 +96,8 @@ public class Main
 
 	public static void main(String[] args) 
 	{
+		BasicConfigurator.configure();
+
 		long startTime = System.currentTimeMillis();
 		System.out.println("==>TIME:" + startTime);
 		
