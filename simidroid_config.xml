@@ -1,0 +1,8 @@
+<SimiDroid>
+	<AndroidJarsPath>/Users/xsun0035/workspace/monash/android-platforms</AndroidJarsPath>
+
+	<Plugin name="METHOD" />
+
+	<SimiThreshold>0.1</SimiThreshold>
+	
+</SimiDroid>

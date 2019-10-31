@@ -7,10 +7,15 @@ import lu.uni.snt.droidra.model.UniqStmt;
 import lu.uni.snt.droidra.typeref.ArrayVarValue;
 import lu.uni.snt.droidra.typeref.soot.fieldrelated.FieldTypesValue;
 import lu.uni.snt.droidra.typeref.soot.methodrelated.*;
+import soot.Body;
 import soot.SootClass;
 import soot.SootMethod;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GlobalRef 
 {
@@ -55,4 +60,15 @@ public class GlobalRef
 	public static SootMethod dummyMainMethod = null;
 	public static SootClass dummyMainClass = null;
 	public static Set<SootClass> dynamicFragment = new HashSet<>();
+
+	/**
+	 * simiDroid analysis results
+	 */
+	public static Set<String> identicalFeatures = new HashSet<String>();
+	public static Set<String> similarFeatures = new HashSet<String>();
+	public static Set<String> newFeatures = new HashSet<String>();
+	public static Set<String> deletedFeatures = new HashSet<String>();
+	public static Set<SootMethod> toBeDeleteSootMethods = new HashSet<SootMethod>();
+
+	public static Map<String, SootMethod> latestAppsMethodList = new ConcurrentHashMap<>();
 }

@@ -16,10 +16,16 @@ import lu.uni.snt.droidra.retarget.SootSetup;
 import lu.uni.snt.droidra.typeref.ArrayVarItemTypeRef;
 import lu.uni.snt.droidra.typeref.soot.SootStmtRef;
 import lu.uni.snt.droidra.util.ApplicationClassFilter;
+import lu.uni.snt.droidra.util.MethodExtraction;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.xmlpull.v1.XmlPullParserException;
+import simidroid.FeatureExtraction;
+import simidroid.TestApps.SimiDroidClient;
+import simidroid.plugin.method.MethodAbstract;
+import simidroid.plugin.method.StmtAbstract;
 import soot.*;
 import soot.javaToJimple.LocalGenerator;
 import soot.jimple.Jimple;
@@ -27,6 +33,7 @@ import soot.jimple.Stmt;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
 import soot.jimple.infoflow.android.iccta.MessageHandler;
 import soot.jimple.infoflow.android.resources.LayoutFileParser;
+import soot.jimple.toolkits.callgraph.Edge;
 import soot.util.Chain;
 
 import java.io.*;
@@ -100,30 +107,32 @@ public class Main
 
 		long startTime = System.currentTimeMillis();
 		System.out.println("==>TIME:" + startTime);
-		
+
+		//args[0]:latest apk load path; args[1]: Android.jar load path; args[2]:incrementalAnalysisSwitch; args[3]: last apk load path
 		String apkPath = args[0];
 		String forceAndroidJar = args[1];
+		String incrementalAnalysisSwitchOn = args[2];
 
-		String dexes = null;
-		if (args.length > 2)
-		{
-			dexes = args[2];
+		//simiDroid Analysis
+		String[] simiDroidArgs = new String[0];
+		if(StringUtils.isNotBlank(incrementalAnalysisSwitchOn) && incrementalAnalysisSwitchOn.equalsIgnoreCase("TRUE")){
+			List<String> params = new ArrayList<String>(Arrays.asList(args));
+			params.remove(forceAndroidJar);
+			params.remove(incrementalAnalysisSwitchOn);
+
+			simiDroidArgs = new String[params.size()];
+			simiDroidArgs = params.toArray(simiDroidArgs);
+			try {
+				SimiDroidClient.simiDroidAnalysis(simiDroidArgs);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("==>simiDroid Analysis error:" + e);
+			}
 		}
 
-		String apkName = apkPath;
-		if (apkName.contains("/"))
-		{
-			apkName = apkName.substring(apkName.lastIndexOf('/')+1);
-		}
-
-		if (! new File(GlobalRef.WORKSPACE).exists())
-		{
-			File workspace = new File(GlobalRef.WORKSPACE);
-			workspace.mkdirs();
-		}
-
+		//calculate EntryPoint to generate dummyMainMethod
 		try {
-			calculateEntryPoint(apkPath, forceAndroidJar, GlobalRef.WORKSPACE);
+			calculateEntryPoint(apkPath, forceAndroidJar, incrementalAnalysisSwitchOn, simiDroidArgs);
 		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
 			System.out.println("==>calculateEntryPoint error:" + e);
@@ -157,7 +166,7 @@ public class Main
 	/**
 	 * calculate Entry Point in the given APK file.
 	 */
-	public static void calculateEntryPoint(String apkPath, String forceAndroidJar, String outputDir) throws IOException, XmlPullParserException {
+	public static void calculateEntryPoint(String apkPath, String forceAndroidJar, String incrementalAnalysisSwitchOn, String[] simiDroidArgs) throws IOException, XmlPullParserException {
 		DummyMainGenerator dummyMainGenerator = new DummyMainGenerator(apkPath);
 		InfoflowAndroidConfiguration config = dummyMainGenerator.config;
 		// sunxiaobiu: 14/10/19 you can modify your own config by changing "config" parameters
@@ -218,7 +227,157 @@ public class Main
 				}
 			}
 		}
+
+
+		//before ouput soot classes, run simiDroid analysis
+		//simiDroidAnalysis();
+		if(incrementalAnalysisSwitchOn.equals("true")){
+			incrementalAnalysis();
+
+			pruningAnalysis();
+
+			deleteSootMethodsInDummyMain();
+		}
+
 		PackManager.v().writeOutput();
+	}
+
+	private static void pruningAnalysis(){
+		Chain<SootClass> applicationClasses = Scene.v().getApplicationClasses();
+
+		for (Iterator<SootClass> iter = applicationClasses.snapshotIterator(); iter.hasNext();) {
+			SootClass sootClass = iter.next();
+
+			if(!ApplicationClassFilter.isApplicationClass(sootClass)){
+				continue;
+			}
+
+			if(!sootClass.isConcrete()){
+				continue;
+			}
+
+			List<SootMethod> methodCopyList = new ArrayList<>(sootClass.getMethods());
+			methodCopyList.stream().filter(methodCopy -> {
+				return methodCopy.isConcrete();
+			}).forEach(methodCopy -> {
+
+				boolean flag = true;
+				Body body = methodCopy.retrieveActiveBody();
+				PatchingChain<Unit> units = body.getUnits();
+
+				for (Iterator<Unit> iterU = units.snapshotIterator(); iterU.hasNext(); )
+				{
+					Stmt stmt = (Stmt) iterU.next();
+
+					if (stmt.containsInvokeExpr()){
+						List<String> methodInvokeChain = new ArrayList<>();
+						methodInvokeChain.add(methodCopy.getSignature());
+						Iterator<Edge> edgeIt = Scene.v().getCallGraph().edgesOutOf(stmt);
+						while (edgeIt.hasNext()) {
+							Edge edge = edgeIt.next();
+							String targetMethodtSignature = edge.getTgt().method().getSignature();
+							String targetClass = edge.getTgt().method().getDeclaringClass().getName();
+							if(ApplicationClassFilter.isApplicationClass(targetClass)){
+								methodInvokeChain.add(targetMethodtSignature);
+							}
+						}
+
+						for(String ms : methodInvokeChain){
+							if(ms.contains("java.lang.reflect")){
+								flag = false;
+							}
+						}
+					}
+				}
+
+				if(flag){
+					GlobalRef.toBeDeleteSootMethods.add(methodCopy);
+				}
+			});
+		}
+	}
+
+	private static void incrementalAnalysis(){
+		Chain<SootClass> applicationClasses = Scene.v().getApplicationClasses();
+
+		for (Iterator<SootClass> iter = applicationClasses.snapshotIterator(); iter.hasNext();) {
+			SootClass sootClass = iter.next();
+
+			if(!ApplicationClassFilter.isApplicationClass(sootClass)){
+				continue;
+			}
+
+			if(!sootClass.isConcrete()){
+				continue;
+			}
+
+			List<SootMethod> methodCopyList = new ArrayList<>(sootClass.getMethods());
+			methodCopyList.stream().filter(methodCopy -> {
+				return methodCopy.isConcrete();
+			}).forEach(methodCopy -> {
+
+				Body body = methodCopy.retrieveActiveBody();
+				PatchingChain<Unit> units = body.getUnits();
+				boolean flag = true;
+
+				if(!GlobalRef.identicalFeatures.contains(methodCopy.getSignature())){
+					flag = false;
+				}
+
+				for (Iterator<Unit> iterU = units.snapshotIterator(); iterU.hasNext(); )
+				{
+					Stmt stmt = (Stmt) iterU.next();
+
+					if (stmt.containsInvokeExpr()){
+
+						List<String> methodInvokeChain = new ArrayList<>();
+						methodInvokeChain.add(methodCopy.getSignature());
+						Iterator<Edge> edgeIt = Scene.v().getCallGraph().edgesOutOf(stmt);
+						while (edgeIt.hasNext()) {
+							Edge edge = edgeIt.next();
+							String targetMethodtSignature = edge.getTgt().method().getSignature();
+							String targetClass = edge.getTgt().method().getDeclaringClass().getName();
+							if(ApplicationClassFilter.isApplicationClass(targetClass)){
+								methodInvokeChain.add(targetMethodtSignature);
+							}
+						}
+
+						for(String ms : methodInvokeChain){
+							if(!GlobalRef.identicalFeatures.contains(ms)){
+								flag = false;
+							}
+						}
+					}
+				}
+
+				if(flag){
+					GlobalRef.toBeDeleteSootMethods.add(methodCopy);
+				}
+			});
+		}
+	}
+
+	private static void deleteSootMethodsInDummyMain() {
+		// delete  toBeDeleteSootMethods in dummyMain
+		Scene.v().getSootClass("dummyMainClass").getMethods().forEach(method->{
+			Body body = method.getActiveBody();
+			UnitPatchingChain units = body.getUnits();
+			units.removeIf((Unit unit) ->{
+				Stmt stmt = (Stmt) unit;
+				if(stmt.containsInvokeExpr()){
+					//System.out.println(stmt.getInvokeExprBox().getValue().toString());
+					String st = stmt.getInvokeExprBox().getValue().toString();
+
+					for(SootMethod sm : GlobalRef.toBeDeleteSootMethods){
+						if(st.contains(sm.getSignature())){
+							System.out.println("Delete this stmt in dummyMainClass:"+st);
+							return true;
+						}
+					}
+				}
+				return false;
+			});
+		});
 	}
 
 	public static void init(String apkPath, String forceAndroidJar, String additionalDexes)
