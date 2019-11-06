@@ -27,6 +27,8 @@ public class ApplicationClassFilter {
                 || clsName.startsWith("soot.")
                 || clsName.startsWith("android.")
                 || clsName.startsWith("java.")
+                || clsName.startsWith("com.facebook.")
+                || clsName.startsWith("org.apache.")
         ) {
             return false;
         }

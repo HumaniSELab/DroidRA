@@ -8,6 +8,7 @@ import lu.uni.snt.droidra.model.StmtKey;
 import lu.uni.snt.droidra.model.StmtType;
 import lu.uni.snt.droidra.model.StmtValue;
 import lu.uni.snt.droidra.model.UniqStmt;
+import lu.uni.snt.droidra.util.ApplicationClassFilter;
 import soot.Body;
 import soot.Scene;
 import soot.SootMethod;
@@ -137,7 +138,11 @@ public class DroidRAResult
 			uniqStmt.className = stmtKey.getMethod().getDeclaringClass().getName();
 			uniqStmt.methodSignature = stmtKey.getMethod().getSignature();
 			uniqStmt.stmt = stmtKey.getStmt().toString();
-			
+
+			if(!ApplicationClassFilter.isApplicationClass(uniqStmt.className)){
+				continue;
+			}
+
 			Body body = stmtKey.getMethod().retrieveActiveBody();
 			int count = 0;
 			for (Iterator<Unit> iter = body.getUnits().snapshotIterator(); iter.hasNext(); )

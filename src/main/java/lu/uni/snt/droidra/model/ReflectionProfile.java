@@ -9,6 +9,7 @@ import java.util.Set;
 
 import lu.uni.snt.droidra.ClassDescription;
 import lu.uni.snt.droidra.booster.InstrumentationUtils;
+import lu.uni.snt.droidra.util.ApplicationClassFilter;
 import soot.Scene;
 import soot.SootClass;
 import soot.jimple.Stmt;
@@ -24,7 +25,12 @@ public class ReflectionProfile
 		{
 			StmtKey key = entry.getKey();
 			StmtValue value = entry.getValue();
-			
+
+			String className = key.getMethod().getDeclaringClass().getName();
+			if(!ApplicationClassFilter.isApplicationClass(className)){
+				continue;
+			}
+
 			for (ClassDescription clsDesc : value.getClsSet())
 			{
 				switch (value.getType())
