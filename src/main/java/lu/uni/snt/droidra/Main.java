@@ -147,6 +147,7 @@ public class Main
 		//toReadableText(apkName);
 		toJson();
 		
+
 		long afterRA = System.currentTimeMillis();
 		System.out.println("==>TIME:" + afterRA);
 		
@@ -172,6 +173,8 @@ public class Main
 		// sunxiaobiu: 14/10/19 you can modify your own config by changing "config" parameters
 		config.getAnalysisFileConfig().setTargetAPKFile(apkPath);
 		config.getAnalysisFileConfig().setAndroidPlatformDir(forceAndroidJar);
+		//config.getCallbackConfig().setCallbackAnalyzer(InfoflowAndroidConfiguration.CallbackAnalyzer.Fast);
+		//config.getCallbackConfig().setEnableCallbacks(false);
 		config.setWriteOutputFiles(true);
 
 		SootSetup.initializeSoot(config, forceAndroidJar);

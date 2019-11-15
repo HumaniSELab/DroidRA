@@ -51,5 +51,6 @@
     <orderEntry type="library" name="Maven: edu.psu.cse.siis:coal:0.1.7" level="project" />
     <orderEntry type="library" name="Maven: org.jdom:jdom2:2.0.6" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20190722" level="project" />
+    <orderEntry type="library" name="Maven: au.monash.edu:iccta:2019-11-12" level="project" />
   </component>
 </module>

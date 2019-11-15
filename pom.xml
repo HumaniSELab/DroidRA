@@ -161,7 +161,11 @@
             <artifactId>json</artifactId>
             <version>20190722</version>
         </dependency>
-
+        <dependency>
+            <groupId>au.monash.edu</groupId>
+            <artifactId>iccta</artifactId>
+            <version>2019-11-12</version>
+        </dependency>
     </dependencies>
 
     <build>

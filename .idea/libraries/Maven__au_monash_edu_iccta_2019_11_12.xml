@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: au.monash.edu:iccta:2019-11-12">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/au/monash/edu/iccta/2019-11-12/iccta-2019-11-12.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/au/monash/edu/iccta/2019-11-12/iccta-2019-11-12-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/au/monash/edu/iccta/2019-11-12/iccta-2019-11-12-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

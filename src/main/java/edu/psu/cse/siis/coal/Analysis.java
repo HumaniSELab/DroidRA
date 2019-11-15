@@ -26,11 +26,12 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import lu.uni.snt.droidra.retarget.SootSetup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import soot.PackManager;
 import edu.psu.cse.siis.coal.lang.ParseException;
+import soot.Scene;
+import static soot.SootClass.SIGNATURES;
 
 /**
  * The high-level pattern for the analysis, including the analysis setup, running the analysis and

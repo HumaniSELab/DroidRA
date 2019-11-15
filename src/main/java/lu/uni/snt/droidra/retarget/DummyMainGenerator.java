@@ -21,11 +21,14 @@ import soot.jimple.infoflow.android.callbacks.filters.AlienHostComponentFilter;
 import soot.jimple.infoflow.android.callbacks.filters.ApplicationCallbackFilter;
 import soot.jimple.infoflow.android.callbacks.filters.UnreachableConstructorFilter;
 import soot.jimple.infoflow.android.entryPointCreators.AndroidEntryPointCreator;
+import soot.jimple.infoflow.android.iccta.Component;
+import soot.jimple.infoflow.android.iccta.ICCDummyMainCreator;
 import soot.jimple.infoflow.android.iccta.IccInstrumenter;
 import soot.jimple.infoflow.android.manifest.ProcessManifest;
 import soot.jimple.infoflow.android.resources.ARSCFileParser;
 import soot.jimple.infoflow.android.resources.LayoutFileParser;
 import soot.jimple.infoflow.android.resources.controls.AndroidLayoutControl;
+import soot.jimple.infoflow.entryPointCreators.AndroidEntryPointConstants;
 import soot.jimple.infoflow.memory.FlowDroidMemoryWatcher;
 import soot.jimple.infoflow.memory.FlowDroidTimeoutWatcher;
 import soot.jimple.infoflow.memory.IMemoryBoundedSolver;
@@ -71,6 +74,23 @@ public class DummyMainGenerator extends SceneTransformer {
 	public DummyMainGenerator(String apkFileLocation)
 	{
 		this.apkFileLocation = apkFileLocation;
+	}
+
+	@Override
+	protected void internalTransform(String phaseName, Map<String, String> options) {
+		try {
+			ProcessManifest processManifest = new ProcessManifest(apkFileLocation);
+			Set<String> entryPoints = processManifest.getEntryPointClasses();
+
+			SootMethod mainMethod = generateMain(entryPoints);
+
+			System.out.println(mainMethod.retrieveActiveBody());
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -170,10 +190,8 @@ public class DummyMainGenerator extends SceneTransformer {
 				continue;
 			}
 
-			//SootMethod method = ICCDummyMainCreator.v().generateDummyMainMethod(str);
-			// TODO: 13/10/19 change  ICCDummyMainCreator to createEntryPointCreator in order to detect fragment in activity
-			entryPointCreator = createEntryPointCreator(sc);
-			SootMethod method = entryPointCreator.createDummyMain();
+			SootMethod method = ICCDummyMainCreator.v().generateDummyMainMethod(str);
+			instrumentDummyMainMethod(method);
 
 			SootClass cls = method.getDeclaringClass();
 			SootMethod sootMethod = cls.getMethod("<init>", new ArrayList<Type>());
@@ -209,6 +227,31 @@ public class DummyMainGenerator extends SceneTransformer {
 		body.validate();
 
 		return mainMethod;
+	}
+
+	public void instrumentDummyMainMethod(SootMethod mainMethod)
+	{
+		Body body = mainMethod.getActiveBody();
+
+		PatchingChain<Unit> units = body.getUnits();
+		for (Iterator<Unit> iter = units.snapshotIterator(); iter.hasNext(); )
+		{
+			Stmt stmt = (Stmt) iter.next();
+
+			if (stmt instanceof IdentityStmt)
+			{
+				continue;
+			}
+
+			//For the purpose of confusion dex optimization (because of the strategy of generating dummyMain method)
+			AssignStmt aStmt = (AssignStmt) stmt;
+			SootMethod fuzzyMe = generateFuzzyMethod(mainMethod.getDeclaringClass());
+			InvokeExpr invokeExpr = Jimple.v().newVirtualInvokeExpr(body.getThisLocal(), fuzzyMe.makeRef());
+			Unit assignU = Jimple.v().newAssignStmt(aStmt.getLeftOp(), invokeExpr);
+			units.insertAfter(assignU, aStmt);
+
+			break;
+		}
 	}
 
 
@@ -482,9 +525,9 @@ public class DummyMainGenerator extends SceneTransformer {
 				: new DefaultCallbackAnalyzer(config, entryPointClasses, callbackClasses);
 		if (valueProvider != null)
 			jimpleClass.setValueProvider(valueProvider);
-		jimpleClass.addCallbackFilter(new AlienHostComponentFilter(entrypoints));
-		jimpleClass.addCallbackFilter(new ApplicationCallbackFilter(entrypoints));
-		jimpleClass.addCallbackFilter(new UnreachableConstructorFilter());
+//		jimpleClass.addCallbackFilter(new AlienHostComponentFilter(entrypoints));
+//		jimpleClass.addCallbackFilter(new ApplicationCallbackFilter(entrypoints));
+//		jimpleClass.addCallbackFilter(new UnreachableConstructorFilter());
 		jimpleClass.collectCallbackMethods();
 
 		// Find the user-defined sources in the layout XML files. This
@@ -555,6 +598,24 @@ public class DummyMainGenerator extends SceneTransformer {
 					}
 				}
 
+				MultiMap<SootClass, CallbackDefinition>  callbackDefinitionMultiMap = jimpleClass.getCallbackMethods();
+				for(SootClass sc : callbackDefinitionMultiMap.keySet()){
+					List<String> targetMethodSigList = getCallbackFunctions(sc);
+					for(String methodSig : targetMethodSigList){
+						Set<CallbackDefinition> callbackDefinitions = callbackDefinitionMultiMap.get(sc);
+						boolean exist = false;
+						for(CallbackDefinition callbackDefinition : callbackDefinitions){
+							if(callbackDefinition.getTargetMethod().equals(methodSig)){
+								exist = true;
+							}
+						}
+						if(!exist){
+							CallbackDefinition newCallbackDefinition = new CallbackDefinition(Scene.v().getMethod(methodSig), null, CallbackDefinition.CallbackType.Default);
+							callbackDefinitions.add(newCallbackDefinition);
+						}
+					}
+				}
+
 				// Collect the results of the soot-based phases
 				if (this.callbackMethods.putAll(jimpleClass.getCallbackMethods()))
 					hasChanged = true;
@@ -569,17 +630,17 @@ public class DummyMainGenerator extends SceneTransformer {
 				// Avoid callback overruns. If we are beyond the callback limit
 				// for one entry point, we may not collect any further callbacks
 				// for that entry point.
-				if (callbackConfig.getMaxCallbacksPerComponent() > 0) {
-					for (Iterator<SootClass> componentIt = this.callbackMethods.keySet().iterator(); componentIt
-							.hasNext();) {
-						SootClass callbackComponent = componentIt.next();
-						if (this.callbackMethods.get(callbackComponent).size() > callbackConfig
-								.getMaxCallbacksPerComponent()) {
-							componentIt.remove();
-							jimpleClass.excludeEntryPoint(callbackComponent);
-						}
-					}
-				}
+//				if (callbackConfig.getMaxCallbacksPerComponent() > 0) {
+//					for (Iterator<SootClass> componentIt = this.callbackMethods.keySet().iterator(); componentIt
+//							.hasNext();) {
+//						SootClass callbackComponent = componentIt.next();
+//						if (this.callbackMethods.get(callbackComponent).size() > callbackConfig
+//								.getMaxCallbacksPerComponent()) {
+//							componentIt.remove();
+//							jimpleClass.excludeEntryPoint(callbackComponent);
+//						}
+//					}
+//				}
 
 				// Check depth limiting
 				depthIdx++;
@@ -620,13 +681,13 @@ public class DummyMainGenerator extends SceneTransformer {
 		}
 
 		// Avoid callback overruns
-		if (callbackConfig.getMaxCallbacksPerComponent() > 0) {
-			for (Iterator<SootClass> componentIt = this.callbackMethods.keySet().iterator(); componentIt.hasNext();) {
-				SootClass callbackComponent = componentIt.next();
-				if (this.callbackMethods.get(callbackComponent).size() > callbackConfig.getMaxCallbacksPerComponent())
-					componentIt.remove();
-			}
-		}
+//		if (callbackConfig.getMaxCallbacksPerComponent() > 0) {
+//			for (Iterator<SootClass> componentIt = this.callbackMethods.keySet().iterator(); componentIt.hasNext();) {
+//				SootClass callbackComponent = componentIt.next();
+//				if (this.callbackMethods.get(callbackComponent).size() > callbackConfig.getMaxCallbacksPerComponent())
+//					componentIt.remove();
+//			}
+//		}
 
 		// Make sure that we don't retain any weird Soot phases
 		PackManager.v().getPack("wjtp").remove("wjtp.lfp");
@@ -642,6 +703,140 @@ public class DummyMainGenerator extends SceneTransformer {
 		}
 		if (!abortedEarly)
 			logger.info("Callback analysis terminated normally");
+	}
+
+	private List<String> getCallbackFunctions(SootClass sc) {
+		List<String> callbacks = new ArrayList<String>();
+
+		for (SootMethod sm : sc.getMethods()) {
+
+			if (sm.getName().contains("init>")) {
+				continue;
+			}
+
+			Component.ComponentType compType = Component.getComponentType(sc);
+			switch (compType) {
+				case Activity:
+					if (AndroidEntryPointConstants.getActivityLifecycleMethods().contains(sm.getName())) {
+						continue;
+					}
+					break;
+				case Service:
+					if (AndroidEntryPointConstants.getServiceLifecycleMethods().contains(sm.getName())) {
+						continue;
+					}
+					break;
+				case BroadcastReceiver:
+					if (AndroidEntryPointConstants.getBroadcastLifecycleMethods().contains(sm.getName())) {
+						continue;
+					}
+					break;
+				case ContentProvider:
+					if (AndroidEntryPointConstants.getContentproviderLifecycleMethods().contains(sm.getName())) {
+						continue;
+					}
+					break;
+			}
+			if (!isPotentialCallbackMethod(sc, sm.getName())) {
+				continue;
+			}
+
+			callbacks.add(sm.getSignature());
+		}
+
+		callbacks.addAll(getAnonymousCallbacks(sc));
+
+		return callbacks;
+	}
+
+	private List<String> getAnonymousCallbacks(SootClass sootClass) {
+		List<String> rtVal = new ArrayList<String>();
+
+		try {
+			String clsName = sootClass.getName();
+
+			if (clsName.contains("$"))
+			{
+				return rtVal;
+			}
+
+			clsName = String.valueOf(clsName) + "$";
+
+			Chain<SootClass> scs = Scene.v().getClasses();
+
+			for (SootClass sc : scs) {
+
+				if (sc.getName().startsWith(clsName)) {
+
+					List<SootMethod> sms = sc.getMethods();
+
+					for (SootMethod sm : sms) {
+
+						if (sm.getName().contains("<init>")) {
+							continue;
+						}
+
+						if (isPotentialCallbackMethod(sc, sm.getName()))
+						{
+							System.out.println("--------------------------->" + sc.getName() + ":" + sm.getName());
+							rtVal.add(sm.getSignature());
+						}
+
+					}
+				}
+			}
+		} catch (Exception ex) {
+
+			ex.printStackTrace();
+		}
+
+		return rtVal;
+	}
+
+	private boolean isPotentialCallbackMethod(SootClass currentClass, String methodName) {
+		boolean existCurrentMethod = false;
+		List<SootMethod> currentMethods = currentClass.getMethods();
+		for (SootMethod method : currentMethods) {
+
+			if (method.getName().equals(methodName)) {
+
+				existCurrentMethod = true;
+
+				break;
+			}
+		}
+		if (!existCurrentMethod)
+		{
+			throw new RuntimeException(String.valueOf(methodName) + " is not belong to class " + currentClass.getName());
+		}
+
+		List<SootClass> extendedClasses = Scene.v().getActiveHierarchy().getSuperclassesOf(currentClass);
+		for (SootClass sc : extendedClasses) {
+
+			List<SootMethod> methods = sc.getMethods();
+			for (SootMethod method : methods) {
+
+				if (method.getName().equals(methodName))
+				{
+					return true;
+				}
+			}
+		}
+
+		Chain<SootClass> interfaces = currentClass.getInterfaces();
+		for (SootClass i : interfaces) {
+
+			List<SootMethod> methods = i.getMethods();
+			for (SootMethod method : methods) {
+
+				if (method.getName().equals(methodName))
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -990,11 +1185,4 @@ public class DummyMainGenerator extends SceneTransformer {
 		return new LayoutFileParser(this.manifest.getPackageName(), this.resources);
 	}
 
-
-	@Override
-	protected void internalTransform(String phaseName, Map<String, String> options) {
-		//Scene.v().addClass(GlobalRef.dummyMainClass);
-
-		System.out.println(Scene.v().getSootClass("dummyMainClass"));
-	}
 }
