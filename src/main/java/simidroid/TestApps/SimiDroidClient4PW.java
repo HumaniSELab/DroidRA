@@ -69,7 +69,7 @@ public class SimiDroidClient4PW {
 
 		sa.output(true);
 		sa.output2GlobalRef(appA1, appA2);
-		sa.writeResultAsJSON(appA1.getAppAbstract().appName.replace(".apk", "") + "-" + 
-				appA2.getAppAbstract().appName.replace(".apk", "") + ".json");
+//		sa.writeResultAsJSON(appA1.getAppAbstract().appName.replace(".apk", "") + "-" +
+//				appA2.getAppAbstract().appName.replace(".apk", "") + ".json");
 	}
 }

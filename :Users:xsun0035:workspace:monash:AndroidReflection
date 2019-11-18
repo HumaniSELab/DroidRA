@@ -1,0 +1,39 @@
+/Users/xsun0035/workspace/monash/AndroidReflection/app/build/outputs/apk/debug/app-debug.apk /Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar
+
+/Users/xsun0035/workspace/monash/DroidBench/apk/Reflection/0190DD5E1B0D26F4ECCA36EE66E46C5F116EC1DF38BA9ED8F8FFF18828080F5D.apk /Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar
+
+
+/Users/xsun0035/workspace/monash/FragmentRigger/app/build/outputs/apk/debug/app-debug.apk /Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar
+
+/Users/xsun0035/Desktop/app-right-fragment.apk /Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar true /Users/xsun0035/Desktop/app-debug.apk
+
+
+
+mvn install:install-file -Dfile=/Users/xsun0035/workspace/monash/soot-infoflow-android-iccta/libs/FlowDroid.jar -DgroupId=au.monash.edu -DartifactId=FlowDroid -Dversion=2019-11-13-1104 -Dpackaging=jar
+
+
+
+/mnt/fit-Knowledgezoo-vault/vault/apks/0190DD5E1B0D26F4ECCA36EE66E46C5F116EC1DF38BA9ED8F8FFF18828080F5D.apk /home/xiaoyu/DroidRA/android.jar
+
+
+map({className: .className}) | group_by(.className) | map({className: .[0].className, Count: length}) | .[]
+
+
+java -jar script.jar ~/originDroidRA/output ~/DroidRA/output >> 11110420_scriptResult.txt
+
+
+
+
+timeout 30000 java -Xmx8G -jar DroidRA.jar $1 /home/xiaoyu/DroidRA/android.jar false > output/$APK_NAME.txt 2>&1
+
+
+
+scp xiaoyu@118.138.163.242:/mnt/fit-Knowledgezoo-vault/vault/apks/03021611B8CAB81434553E7D9996B43D511B2AF0C69A09CE501CA8131D74B0AC.apk ~/Desktop
+
+
+/Users/xsun0035/Desktop/01717F0062BE9D4A8086F2FF791A96B7109DFB896BF271688ADE3307488D3175.apk /Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar
+
+
+
+
+079C233030B4B381EAF9ACB0D7F2F855AB2D23C84D623075434F32F418955C2F.apk

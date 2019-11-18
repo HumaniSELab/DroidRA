@@ -13,25 +13,18 @@ import lu.uni.snt.droidra.model.UniqStmt;
 import lu.uni.snt.droidra.retarget.DummyMainGenerator;
 import lu.uni.snt.droidra.retarget.RetargetWithDummyMainGenerator;
 import lu.uni.snt.droidra.retarget.SootSetup;
-import lu.uni.snt.droidra.typeref.ArrayVarItemTypeRef;
 import lu.uni.snt.droidra.typeref.soot.SootStmtRef;
 import lu.uni.snt.droidra.util.ApplicationClassFilter;
-import lu.uni.snt.droidra.util.MethodExtraction;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.BasicConfigurator;
 import org.xmlpull.v1.XmlPullParserException;
-import simidroid.FeatureExtraction;
 import simidroid.TestApps.SimiDroidClient;
-import simidroid.plugin.method.MethodAbstract;
-import simidroid.plugin.method.StmtAbstract;
 import soot.*;
 import soot.javaToJimple.LocalGenerator;
-import soot.jimple.Jimple;
 import soot.jimple.Stmt;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
-import soot.jimple.infoflow.android.iccta.MessageHandler;
 import soot.jimple.infoflow.android.resources.LayoutFileParser;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.util.Chain;
@@ -141,7 +134,7 @@ public class Main
 		//init(apkPath, forceAndroidJar, null);
 		
 		long afterDummyMain = System.currentTimeMillis();
-		System.out.println("==>TIME:" + afterDummyMain);
+		System.out.println("==>afterDummyMain TIME:" + afterDummyMain);
 
 		reflectionAnalysis();
 		//toReadableText(apkName);
@@ -149,16 +142,16 @@ public class Main
 		
 
 		long afterRA = System.currentTimeMillis();
-		System.out.println("==>TIME:" + afterRA);
+		System.out.println("==>afterRA TIME:" + afterRA);
 		
 //		booster();
 		
 		long afterBooster = System.currentTimeMillis();
-		System.out.println("==>TIME:" + afterBooster);
+		System.out.println("==>afterBooster TIME:" + afterBooster);
 		
 		System.out.println("====>TIME_TOTAL:" + startTime + "," + afterDummyMain + "," + afterRA + "," + afterBooster);
 	}
-	
+
 	public static int test()
 	{
 		return (int) new Object();
@@ -237,7 +230,7 @@ public class Main
 		if(incrementalAnalysisSwitchOn.equals("true")){
 			incrementalAnalysis();
 
-			pruningAnalysis();
+			//pruningAnalysis();
 
 			deleteSootMethodsInDummyMain();
 		}
@@ -323,7 +316,11 @@ public class Main
 				PatchingChain<Unit> units = body.getUnits();
 				boolean flag = true;
 
-				if(!GlobalRef.identicalFeatures.contains(methodCopy.getSignature())){
+				if(GlobalRef.newFeatures.contains(methodCopy.getSignature())){
+					flag = false;
+				}
+
+				if(GlobalRef.similarFeatures.contains(methodCopy.getSignature())){
 					flag = false;
 				}
 
@@ -362,13 +359,15 @@ public class Main
 
 	private static void deleteSootMethodsInDummyMain() {
 		// delete  toBeDeleteSootMethods in dummyMain
-		Scene.v().getSootClass("dummyMainClass").getMethods().forEach(method->{
+		Scene.v().getSootClass("dummyMainClass").getMethods().stream().filter(sootMethod -> {
+			return !sootMethod.getSignature().equals("<dummyMainClass: void main(java.lang.String[])>");
+		}).forEach(method->{
 			Body body = method.getActiveBody();
 			UnitPatchingChain units = body.getUnits();
 			units.removeIf((Unit unit) ->{
 				Stmt stmt = (Stmt) unit;
 				if(stmt.containsInvokeExpr()){
-					//System.out.println(stmt.getInvokeExprBox().getValue().toString());
+					System.out.println(stmt.getInvokeExprBox().getValue().toString());
 					String st = stmt.getInvokeExprBox().getValue().toString();
 
 					for(SootMethod sm : GlobalRef.toBeDeleteSootMethods){
