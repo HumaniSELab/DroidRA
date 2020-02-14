@@ -27,6 +27,8 @@ import soot.jimple.Stmt;
 import soot.jimple.infoflow.android.InfoflowAndroidConfiguration;
 import soot.jimple.infoflow.android.resources.LayoutFileParser;
 import soot.jimple.toolkits.callgraph.Edge;
+import soot.jimple.toolkits.callgraph.ReachableMethods;
+import soot.jimple.toolkits.callgraph.Targets;
 import soot.util.Chain;
 
 import java.io.*;
@@ -132,7 +134,7 @@ public class Main
 		}
 		// sunxiaobiu: 14/10/19 change init to new FlowDroid Setup Method
 		//init(apkPath, forceAndroidJar, null);
-		
+
 		long afterDummyMain = System.currentTimeMillis();
 		System.out.println("==>afterDummyMain TIME:" + afterDummyMain);
 
@@ -224,6 +226,44 @@ public class Main
 			}
 		}
 
+		dummyMainGenerator.entrypoints.forEach(entrypoint -> {
+			Set<String> methodInvokeChain = new HashSet<>();
+			boolean flag = true;
+
+			entrypoint.getMethods().forEach(sootMethod -> {
+				Body body = sootMethod.retrieveActiveBody();
+
+				PatchingChain<Unit> units = body.getUnits();
+
+				for (Iterator<Unit> iterU = units.snapshotIterator(); iterU.hasNext(); )
+				{
+					Stmt stmt = (Stmt) iterU.next();
+
+					if (stmt.containsInvokeExpr()){
+						methodInvokeChain.add(stmt.getInvokeExpr().getMethodRef().getSignature());
+						Iterator<Edge> edgeIt = Scene.v().getCallGraph().edgesOutOf(stmt);
+						while (edgeIt.hasNext()) {
+							Edge edge = edgeIt.next();
+							String targetMethodDeclaringClass = edge.getTgt().method().getSignature();
+							methodInvokeChain.add(targetMethodDeclaringClass);
+						}
+					}
+				}
+			});
+
+			for(String ms : methodInvokeChain){
+				if(isReflectionCall(ms)){
+					flag = false;
+				}
+			}
+			if(flag){
+				entrypoint.getMethods().forEach(methodCopy->{
+					GlobalRef.toBeDeleteSootMethods.add(methodCopy);
+				});
+			}
+		});
+
+		deleteSootMethodsInDummyMain();
 
 		//before ouput soot classes, run simiDroid analysis
 		//simiDroidAnalysis();
@@ -236,61 +276,6 @@ public class Main
 		}
 
 		PackManager.v().writeOutput();
-	}
-
-	private static void pruningAnalysis(){
-		Chain<SootClass> applicationClasses = Scene.v().getApplicationClasses();
-
-		for (Iterator<SootClass> iter = applicationClasses.snapshotIterator(); iter.hasNext();) {
-			SootClass sootClass = iter.next();
-
-			if(!ApplicationClassFilter.isApplicationClass(sootClass)){
-				continue;
-			}
-
-			if(!sootClass.isConcrete()){
-				continue;
-			}
-
-			List<SootMethod> methodCopyList = new ArrayList<>(sootClass.getMethods());
-			methodCopyList.stream().filter(methodCopy -> {
-				return methodCopy.isConcrete();
-			}).forEach(methodCopy -> {
-
-				boolean flag = true;
-				Body body = methodCopy.retrieveActiveBody();
-				PatchingChain<Unit> units = body.getUnits();
-
-				for (Iterator<Unit> iterU = units.snapshotIterator(); iterU.hasNext(); )
-				{
-					Stmt stmt = (Stmt) iterU.next();
-
-					if (stmt.containsInvokeExpr()){
-						List<String> methodInvokeChain = new ArrayList<>();
-						methodInvokeChain.add(methodCopy.getSignature());
-						Iterator<Edge> edgeIt = Scene.v().getCallGraph().edgesOutOf(stmt);
-						while (edgeIt.hasNext()) {
-							Edge edge = edgeIt.next();
-							String targetMethodtSignature = edge.getTgt().method().getSignature();
-							String targetClass = edge.getTgt().method().getDeclaringClass().getName();
-							if(ApplicationClassFilter.isApplicationClass(targetClass)){
-								methodInvokeChain.add(targetMethodtSignature);
-							}
-						}
-
-						for(String ms : methodInvokeChain){
-							if(ms.contains("java.lang.reflect")){
-								flag = false;
-							}
-						}
-					}
-				}
-
-				if(flag){
-					GlobalRef.toBeDeleteSootMethods.add(methodCopy);
-				}
-			});
-		}
 	}
 
 	private static void incrementalAnalysis(){
@@ -367,7 +352,6 @@ public class Main
 			units.removeIf((Unit unit) ->{
 				Stmt stmt = (Stmt) unit;
 				if(stmt.containsInvokeExpr()){
-					System.out.println(stmt.getInvokeExprBox().getValue().toString());
 					String st = stmt.getInvokeExprBox().getValue().toString();
 
 					for(SootMethod sm : GlobalRef.toBeDeleteSootMethods){
@@ -380,6 +364,22 @@ public class Main
 				return false;
 			});
 		});
+	}
+
+	private static boolean isReflectionCall(String declaringClassName){
+		return declaringClassName.contains("java.lang.reflect")
+				|| declaringClassName.contains("forName")
+				|| declaringClassName.contains("getName")
+				|| declaringClassName.contains("getSimpleName")
+				|| declaringClassName.contains("isAssignableFrom")
+				|| declaringClassName.contains("invoke")
+				|| declaringClassName.contains("getClassLoader")
+				|| declaringClassName.contains("forName")
+				|| declaringClassName.contains("getMethod")
+				|| declaringClassName.contains("desiredAssertionStatus")
+				|| declaringClassName.contains("java.lang.Object newInstance()")
+				|| declaringClassName.contains("truenet.kotlin.reflect")
+				;
 	}
 
 	public static void init(String apkPath, String forceAndroidJar, String additionalDexes)
@@ -424,6 +424,7 @@ public class Main
 			AndroidMethodReturnValueAnalyses.registerAndroidMethodReturnValueAnalyses("");
 			analysis.performAnalysis(commandLineArguments);
 		}
+		System.out.println("CallGraphSize="+Scene.v().getCallGraph().size());
 		GlobalRef.uniqStmtKeyValues = DroidRAResult.toUniqStmtKeyValues(HeuristicUnknownValueInfer.getInstance().infer(DroidRAResult.stmtKeyValues));
 		
 		ReflectionProfile.fillReflectionProfile(DroidRAResult.stmtKeyValues);
@@ -515,6 +516,15 @@ public class Main
 		for (Iterator<SootClass> iter = applicationClasses.snapshotIterator(); iter.hasNext(); ) {
 			SootClass sootClass = iter.next();
 
+			if(!sootClass.isInterface()){
+				List<SootClass> extendedClasses = Scene.v().getActiveHierarchy().getSuperclassesOf(sootClass);
+				for (SootClass sc : extendedClasses) {
+					if(sc.getName().contains("Fragment")){
+						dynamicFragment.add(sootClass);
+					}
+				}
+			}
+
 			// We copy the list of methods to emulate a snapshot iterator which
 			// doesn't exist for methods in Soot
 			List<SootMethod> methodCopyList = new ArrayList<>(sootClass.getMethods());
@@ -534,8 +544,16 @@ public class Main
 
 								SootClass fragmentClass = Scene.v().getSootClass(stmt.getInvokeExpr().getArgBox(1).getValue().getType().toString());
 								if(ApplicationClassFilter.isApplicationClass(fragmentClass)){
-									System.out.println(callee);
+									//System.out.println(callee);
 									dynamicFragment.add(Scene.v().getSootClass(stmt.getInvokeExpr().getArgBox(1).getValue().getType().toString()));
+								}
+							}
+							if (null != callee && null != callee.getSignature() && callee.getSignature().contains("Fragment")) {
+
+								SootClass fragmentClass = sootClass;
+								if(ApplicationClassFilter.isApplicationClass(fragmentClass)){
+									//System.out.println(callee);
+									dynamicFragment.add(fragmentClass);
 								}
 							}
 						}

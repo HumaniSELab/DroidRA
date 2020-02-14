@@ -49,7 +49,7 @@ public class SimilarityAnalysis
 				else
 				{
 					similarFeatures.add(feature);
-					System.out.println("[CHANGE] " + feature + ":" + src.toString() + "-->" + dest.toString());
+					//System.out.println("[CHANGE] " + feature + ":" + src.toString() + "-->" + dest.toString());
 				}
 			}
 			else

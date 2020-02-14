@@ -66,7 +66,18 @@ public class UnknowValueInferServiceImpl implements UnknowValueInferService {
                         nameParamTypesKey.name = methodName;
                         nameParamTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(key.getStmt().getInvokeExpr().getMethod().getParameterTypes());
 
-                        Set<String> possibleClsNames = nameParamTypesKeyClassValueMap.get(nameParamTypesKey);
+                        Set<String> possibleClsNames = new HashSet<>();
+
+                        Set<String> clsNames = nameParamTypesKeyClassValueMap.get(nameParamTypesKey);
+                        if(clsNames != null){
+                            possibleClsNames.addAll(clsNames);
+                        }
+
+                        nameParamTypesKeyClassValueMap.forEach((k,v)->{
+                            if(k.name.contains(methodName)){
+                                possibleClsNames.addAll(v);
+                            }
+                        });
 
                         if (null != possibleClsNames && possibleClsNames.size() > 0) {
                             oldSet.add(clsDesc);
@@ -83,7 +94,7 @@ public class UnknowValueInferServiceImpl implements UnknowValueInferService {
                 }
             });
             value.getClsSet().removeAll(oldSet);
-            value.getClsSet().addAll(newSet);
+            value.getClsSet().addAll (newSet);
 
             newStmtKeyValues.put(key, value);
         });
@@ -140,7 +151,18 @@ public class UnknowValueInferServiceImpl implements UnknowValueInferService {
                         classParamTypesKey.cls = clsName;
                         classParamTypesKey.paramTypes = TypeConversionUtil.convertSootParamtypes2String(key.getStmt().getInvokeExpr().getMethod().getParameterTypes());
 
-                        Set<String> possibleMethodNames = classParamTypesKeyMethodValueMap.get(classParamTypesKey);
+                        Set<String> possibleMethodNames = new HashSet<>();
+
+                        Set<String> methodNames = classParamTypesKeyMethodValueMap.get(classParamTypesKey);
+                        if(null != methodNames){
+                            possibleMethodNames.addAll(methodNames);
+                        }
+
+                        classParamTypesKeyMethodValueMap.forEach((k,v)->{
+                            if(k.cls.contains(clsName)){
+                                possibleMethodNames.addAll(v);
+                            }
+                        });
 
                         if (null != possibleMethodNames && possibleMethodNames.size() > 0) {
                             oldSet.add(clsDesc);

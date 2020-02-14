@@ -778,7 +778,7 @@ public class DummyMainGenerator extends SceneTransformer {
 
 						if (isPotentialCallbackMethod(sc, sm.getName()))
 						{
-							System.out.println("--------------------------->" + sc.getName() + ":" + sm.getName());
+							//System.out.println("--------------------------->" + sc.getName() + ":" + sm.getName());
 							rtVal.add(sm.getSignature());
 						}
 
@@ -1086,6 +1086,9 @@ public class DummyMainGenerator extends SceneTransformer {
 						}
 					}
 
+					if (fragments != null){
+						System.out.println("This App Has Fragment, Fragment size="+fragments.size());
+					}
 					if (fragments != null)
 						for (SootClass fragment : fragments)
 							if (fragmentClasses.put(callbackClass, fragment))

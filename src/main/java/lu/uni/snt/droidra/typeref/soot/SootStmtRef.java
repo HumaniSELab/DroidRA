@@ -47,6 +47,7 @@ public class SootStmtRef {
         String[] args =
                 {
                         "-process-dir", input,
+                        "-process-dir", clsPath,
                         "-ire",
                         "-pp",
                         "-allow-phantom-refs",
@@ -74,18 +75,18 @@ public class SootStmtRef {
         PackManager.v().getPack("wjtp").add(new Transform("wjtp.SootStmtMethodRef", new SceneTransformer() {
             @Override
             protected void internalTransform(String s, Map<String, String> map) {
-                Chain<SootClass> applicationClasses = Scene.v().getApplicationClasses();
+                Chain<SootClass> applicationClasses = Scene.v().getClasses();
 
                 for (Iterator<SootClass> iter = applicationClasses.snapshotIterator(); iter.hasNext();) {
                     SootClass sootClass = iter.next();
 
-                    if(!ApplicationClassFilter.isApplicationClass(sootClass)){
-                        continue;
-                    }
-
-                    if(!sootClass.isConcrete()){
-                        continue;
-                    }
+//                    if(!ApplicationClassFilter.isApplicationClass(sootClass)){
+//                        continue;
+//                    }
+//
+//                    if(!sootClass.isConcrete()){
+//                        continue;
+//                    }
 
                     List<SootMethod> methodCopyList = new ArrayList<>(sootClass.getMethods());
                     methodCopyList.stream().filter(methodCopy -> {
@@ -109,13 +110,13 @@ public class SootStmtRef {
                 for (Iterator<SootClass> iter = applicationClasses.snapshotIterator(); iter.hasNext();) {
                     SootClass sootClass = iter.next();
 
-                    if(!ApplicationClassFilter.isApplicationClass(sootClass)){
-                        continue;
-                    }
-
-                    if(!sootClass.isConcrete()){
-                        continue;
-                    }
+//                    if(!ApplicationClassFilter.isApplicationClass(sootClass)){
+//                        continue;
+//                    }
+//
+//                    if(!sootClass.isConcrete()){
+//                        continue;
+//                    }
 
                     sootClass.getFields().stream().forEach(sootField -> {
                         convertToClassNameFieldTypesMap(sootClass.getName(), sootField);

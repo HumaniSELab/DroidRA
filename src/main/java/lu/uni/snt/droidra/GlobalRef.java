@@ -70,5 +70,10 @@ public class GlobalRef
 	public static Set<String> deletedFeatures = new HashSet<String>();
 	public static Set<SootMethod> toBeDeleteSootMethods = new HashSet<SootMethod>();
 
+	/**
+	 * prunning analysis results
+	 */
+	public static Set<SootMethod> componentReflectionMethods = new HashSet<SootMethod>();
+
 	public static Map<String, SootMethod> latestAppsMethodList = new ConcurrentHashMap<>();
 }

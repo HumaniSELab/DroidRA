@@ -45,9 +45,9 @@ public class CoalResultAccuracyVerifyServiceImpl implements CoalResultAccuracyVe
                             //TODO 2019/9/30 sun
                             break;
                         case METHOD_CALL:
-                            if(!ApplicationClassFilter.isApplicationClass(clsName)){
-                                break;
-                            }
+//                            if(!ApplicationClassFilter.isApplicationClass(clsName)){
+//                                break;
+//                            }
                             ClassMethodParamTypesKey classMethodParamTypesKey = new ClassMethodParamTypesKey();
                             classMethodParamTypesKey.cls = clsName;
                             classMethodParamTypesKey.method = name;

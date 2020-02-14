@@ -212,8 +212,7 @@ public abstract class Analysis<A extends CommandLineArguments> {
       FatalAnalysisException exception);
 
   /**
-   * Computes the set of classes in a directory or a jar file. This method computes the fully
-   * qualified Java name of all the classes under a given directory. The class files can be in
+   * Computes the set of classes in a directory or a jar file. cd The class files can be in
    * multiple packages.
    * 
    * @param dirOrJar A directory or jar path.
@@ -239,7 +238,7 @@ public abstract class Analysis<A extends CommandLineArguments> {
 
   /**
    * Helper for computing the set of classes in a directory.
-   * 
+   *
    * @param directory A {@link java.io.File File} object for the directory under which classes
    *          should be searched for.
    * @param basePos The position of the first letter for the Java package names in the directory's

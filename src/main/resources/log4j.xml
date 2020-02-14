@@ -19,7 +19,7 @@
 <!--    </logger>-->
 
     <root>
-        <level value="info" />
+        <level value="error" />
         <appender-ref ref="stdout" />
     </root>
 
