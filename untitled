@@ -1,0 +1,21 @@
+
+#/bin/bash
+
+APK_NAME=`basename $1 .apk`
+echo $APK_NAME >> a.txt
+originNum=($(~/originDroidRA/output/$APK_NAME.json | jq '.[] | length'))
+currentNum=($(~/DroidRA/output/$APK_NAME.json | jq '.[] | length'))
+
+echo $originNum >> a.txt
+echo $currentNum >> a.txt
+
+cat ~/originDroidRA/output/$APK_NAME.json | jq '.[] | length' >> a.txt
+cat ~/DroidRA/output/$APK_NAME.json | jq '.[] | length' >> a.txt
+
+i=0
+
+until [ $i -gt 3 ]
+do
+  echo i: $i
+  ((i=i+1))
+done

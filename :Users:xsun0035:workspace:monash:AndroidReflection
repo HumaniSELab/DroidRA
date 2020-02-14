@@ -1,0 +1,114 @@
+/Users/xsun0035/workspace/monash/AndroidReflection/app/build/outputs/apk/debug/app-debug.apk /Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar
+
+/Users/xsun0035/workspace/monash/DroidBench/apk/Reflection/0190DD5E1B0D26F4ECCA36EE66E46C5F116EC1DF38BA9ED8F8FFF18828080F5D.apk /Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar
+
+
+/Users/xsun0035/workspace/monash/FragmentRigger/app/build/outputs/apk/debug/app-debug.apk /Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar
+
+/Users/xsun0035/Desktop/app-right-fragment.apk /Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar true /Users/xsun0035/Desktop/app-debug.apk
+
+
+/Users/xsun0035/Desktop/971E894433C41EDD7D4F0A8FC337421542D614A92381952A4350F2CF8B9BBDBB.apk /Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar false /Users/xsun0035/Desktop/app-right-fragment.apk
+
+mvn install:install-file -Dfile=/Users/xsun0035/workspace/monash/soot-infoflow-android-iccta/libs/FlowDroid.jar -DgroupId=au.monash.edu -DartifactId=FlowDroid -Dversion=2019-11-13-1104 -Dpackaging=jar
+
+
+
+/mnt/fit-Knowledgezoo-vault/vault/apks/0190DD5E1B0D26F4ECCA36EE66E46C5F116EC1DF38BA9ED8F8FFF18828080F5D.apk /home/xiaoyu/DroidRA/android.jar
+
+
+
+java -jar script.jar ~/originDroidRA/output ~/DroidRA/output >> 11110420_scriptResult.txt
+
+
+
+timeout 30000 java -Xmx8G -jar DroidRA.jar $1 /home/xiaoyu/DroidRA/android.jar false > output/$APK_NAME.txt 2>&1
+
+
+
+scp xiaoyu@118.138.163.242:/mnt/fit-Knowledgezoo-vault/vault/apks/03021611B8CAB81434553E7D9996B43D511B2AF0C69A09CE501CA8131D74B0AC.apk ~/Desktop
+
+
+/Users/xsun0035/Desktop/01717F0062BE9D4A8086F2FF791A96B7109DFB896BF271688ADE3307488D3175.apk /Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar
+
+sha256,sha1,md5,dex_date,apk_size,pkg_name,vercode,vt_detection,vt_scan_date,dex_size,markets
+
+
+
+统计结果：
+1. 优化*
+指令：java -jar calculate_optimized_num_script.jar ~/originDroidRA/output     
+结果：allReflectionJsonNum:19629, INACCURATE NUM:3014, OPTIMIZED NUM:3800
+
+2. Fragment:
+指令：java -jar calculate_fragment_num_script.jar ~/originDroidRA/output ~/DroidRA/output  
+结果：EQUAL:11369, DECREASING:30, INCREASING:259, BOTH_DEC_INC:6, BOTH_INC_NUM:85, BOTH_DEC_NUM:24, NONE:0
+
+3. incremental analysis:
+
+
+
+You were redirected here because you do not have access to the appropriate page
+
+
+新的服务器IP地址：130.194.180.157
+
+
+130.194.180.157
+
+我这里收集的主要有几个：
+1. 那天说的场景
+2. 推理规则自动挖掘，这个是热门
+3. 图谱的质量评估，目前业界全是人工抽样，这个可以花力气看看，目前没有解决方案
+4. 图谱+各种应用，比如智能问答、搜索等，但是好多不是偏算法，偏工程了
+
+赵军的《知识图谱》
+
+
+1.把SDk的jar加进去猜*（原始的DroidRA结果）csv
+2.Fragment 原始的
+3.call graph method大小
+没有反射的component对的去掉
+
+
+/Users/xsun0035/workspace/monash/android-platforms/android-17/android.jar
+
+
+
+
+
+
+
+
+getFragmentInfo
+processGcmMessage
+
+nameParamTypesKeyClassValueMap.forEach((k,v)->{
+    if(k.name.contains("onPatternCleared")){
+        System.out.println(k.paramTypes);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
