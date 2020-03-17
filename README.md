@@ -36,14 +36,17 @@ The following is required to set up DroidRA:
 ##### Step 1: add iccta-2019-11-12.jar to your laptop
 mvn install:install-file -Dfile=~/DroidRA/res/iccta-2019-11-12.jar -DgroupId=au.monash.edu -DartifactId=iccta -Dversion=2019-11-12 -Dpackaging=jar
 
-##### Step 2: example of running DroidRA(4 parameters):
-* If you want to run DroidRA with prunning analysis, then you should set 4 parameters as inputs.
+##### Step 2: build package：
+mvn clean install
+
+##### Step 3: example of running DroidRA(4 parameters):
+* If you want to run DroidRA with prunning analysis, then you should set 4 parameters as inputs：
 ~/lastest_version.apk
 ~/android-platforms/android-17/android.jar
 true
 ~/last_version.apk
 
-* If you want to run DroidRA without prunning analysis, then you should set 3 parameters as inputs.
+* If you want to run DroidRA without prunning analysis, then you should set 3 parameters as inputs：
 ~/lastest_version.apk
 ~/android-platforms/android-17/android.jar
 false
