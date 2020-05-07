@@ -59,8 +59,8 @@ public class CoalResultAccuracyVerifyServiceImpl implements CoalResultAccuracyVe
                                 oldSet.add(clsDesc);
 
                                 ClassDescription cd = new ClassDescription();
-                                cd.cls = DroidRAConstant.INACCURATE + clsName;
-                                cd.name = DroidRAConstant.INACCURATE + name;
+                                cd.cls = DroidRAConstant.OPTIMIZED + clsName;
+                                cd.name = DroidRAConstant.OPTIMIZED + name;
                                 newSet.add(cd);
                             }
                             break;
