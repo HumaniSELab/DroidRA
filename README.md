@@ -28,3 +28,25 @@ transforms it in a new app where reflective calls are augmented with standard ja
 In order to evaluate our approach on the support of existing static analyzers, e.g., FlowDroid or IccTA,
 we provide 13 test cases (4 is avaliable in the current DroidBench project) to assess.
 Excepting the four DroidBench apps, the remaining apps are currently under the benchmark-apps directory.
+
+## Setup
+The following is required to set up DroidRA:
+* MAC system
+
+##### Step 1: add iccta-2019-11-12.jar to your laptop
+mvn install:install-file -Dfile=~/DroidRA/res/iccta-2019-11-12.jar -DgroupId=au.monash.edu -DartifactId=iccta -Dversion=2019-11-12 -Dpackaging=jar
+
+##### Step 2: build package：
+mvn clean install
+
+##### Step 3: example of running DroidRA(4 parameters):
+* If you want to run DroidRA with prunning analysis, then you should set 4 parameters as inputs：
+~/lastest_version.apk
+~/android-platforms/android-17/android.jar
+true
+~/last_version.apk
+
+* If you want to run DroidRA without prunning analysis, then you should set 3 parameters as inputs：
+~/lastest_version.apk
+~/android-platforms/android-17/android.jar
+false

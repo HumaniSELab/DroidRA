@@ -263,14 +263,12 @@ public class Main
 			}
 		});
 
-		deleteSootMethodsInDummyMain();
+		//deleteSootMethodsInDummyMain();
 
 		//before ouput soot classes, run simiDroid analysis
 		//simiDroidAnalysis();
 		if(incrementalAnalysisSwitchOn.equals("true")){
 			incrementalAnalysis();
-
-			//pruningAnalysis();
 
 			deleteSootMethodsInDummyMain();
 		}
