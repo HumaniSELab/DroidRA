@@ -142,39 +142,16 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
           }else{
             return Collections.singleton((Object) TOP_VALUE);
           }
-//          if (classNames.contains(TOP_VALUE)) {
-//            return Collections.singleton((Object) TOP_VALUE);
-//          } else {
-//            result.addAll(classNames);
-//          }
+
         } else if (method.getSignature().equals("<java.lang.Object: java.lang.Class getClass()>")) {
           VirtualInvokeExpr virtualInvokeExpr = (VirtualInvokeExpr) invokeExpr;
           if (logger.isDebugEnabled()) {
             logger.debug("Returning " + virtualInvokeExpr.getBase().getType().toString());
           }
 
-          List<DefinitionStmt> assignmentList = findAssignmentsForLocal(assignStmt,(Local)virtualInvokeExpr.getBase(), true, new HashSet<Pair<Unit, Local>>());
-          //process assignStmts
-          List<DefinitionStmt> enrichAssignmentList = null;
-
-          enrichAssignmentList = new ArrayList<>();
-          enrichAssignmentList.addAll(assignmentList);
-          for (DefinitionStmt as : assignmentList) {
-            Value rv = as.getRightOp();
-            if (CollectionUtils.isNotEmpty(rv.getUseBoxes())) {
-              List<DefinitionStmt> additionalAssignments = handleVariableInvoke(rv, as, new HashSet<>());
-              enrichAssignmentList.addAll(additionalAssignments);
-            }
-          }
-
-          Set<Object> objects = processClassAssignments(enrichAssignmentList, visitedStmts);
-
-          if(CollectionUtils.isNotEmpty(objects)){
-              List<Object> specificClassName = objects.stream().filter(ob->{ return !ob.toString().equals(TOP_VALUE) && !ob.toString().equals(Constants.NULL_STRING); }).collect(Collectors.toList());
-              if(CollectionUtils.isNotEmpty(specificClassName)){
-                  return Collections.singleton((Object) specificClassName.get(0).toString());
-              }
-          }
+          //Optimize DroidRA to enhance accuracy by back tracing Local value
+          Set<Object> specificClassName = backTraceLocal(visitedStmts, assignStmt, virtualInvokeExpr);
+          if (specificClassName != null) return specificClassName;
 
           return Collections.singleton((Object) virtualInvokeExpr.getBase().getType().toString());
         } else {
@@ -196,6 +173,30 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
       return Collections.singleton((Object) TOP_VALUE);
     }
     return result;
+  }
+
+  private Set<Object> backTraceLocal(Set<Stmt> visitedStmts, DefinitionStmt assignStmt, VirtualInvokeExpr virtualInvokeExpr) {
+    List<DefinitionStmt> assignmentList = findAssignmentsForLocal(assignStmt,(Local)virtualInvokeExpr.getBase(), true, new HashSet<Pair<Unit, Local>>());
+    //process assignStmts
+    List<DefinitionStmt> enrichAssignmentList = new ArrayList<>();
+    enrichAssignmentList.addAll(assignmentList);
+    for (DefinitionStmt as : assignmentList) {
+      Value rv = as.getRightOp();
+      if (CollectionUtils.isNotEmpty(rv.getUseBoxes())) {
+        List<DefinitionStmt> additionalAssignments = handleVariableInvoke(rv, as, new HashSet<>());
+        enrichAssignmentList.addAll(additionalAssignments);
+      }
+    }
+
+    Set<Object> objects = processClassAssignments(enrichAssignmentList, visitedStmts);
+
+    if(CollectionUtils.isNotEmpty(objects)){
+        List<Object> specificClassName = objects.stream().filter(ob->{ return !ob.toString().equals(TOP_VALUE) && !ob.toString().equals(Constants.NULL_STRING); }).collect(Collectors.toList());
+        if(CollectionUtils.isNotEmpty(specificClassName)){
+            return Collections.singleton((Object) specificClassName.get(0).toString());
+        }
+    }
+    return null;
   }
 
   /**
