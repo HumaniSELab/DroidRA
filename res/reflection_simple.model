@@ -30,6 +30,17 @@ class dummy {
   query <java.lang.Class: java.io.InputStream getResourceAsStream(java.lang.String)> {
     0: type String;
   }
+  
+  query <android.content.Context: android.content.Context createPackageContext(java.lang.String,int)> {
+    0: type String;
+  }
+}
+
+class android.content.Context {
+  super superClass = android.content.Context;
+  query <superClass: android.content.Context createPackageContext(java.lang.String,int)> {
+    0: type String;
+  }
 }
 
 class java.lang.Class {
