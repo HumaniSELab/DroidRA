@@ -34,9 +34,9 @@ The following is required to set up DroidRA:
 * MAC system
 
 ##### Step 1: Load dependencies to your local repository
-git clone git@github.com:MobileSE/DroidRA.git
-cd DroidRA
-./res/loadDependencies.sh
+* git clone git@github.com:MobileSE/DroidRA.git
+* cd DroidRA
+* ./res/loadDependencies.sh
 
 ##### Step 2: build package：
 mvn clean install
