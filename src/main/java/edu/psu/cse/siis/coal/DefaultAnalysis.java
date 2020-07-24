@@ -39,6 +39,8 @@ import edu.psu.cse.siis.coal.arguments.ArgumentValueManager;
 import edu.psu.cse.siis.coal.arguments.MethodReturnValueManager;
 import edu.psu.cse.siis.coal.field.transformers.FieldTransformerManager;
 
+import static soot.SootClass.SIGNATURES;
+
 /**
  * A default analysis, which performs constant propagation with the default method argument
  * analyses. Supported field operations are: add, remove, clear and replace. Supported method
@@ -87,6 +89,25 @@ public class DefaultAnalysis<A extends CommandLineArguments> extends Analysis<A>
     Options.v().set_prepend_classpath(true);
 
     Options.v().set_src_prec(Options.src_prec_java);
+//    Scene.v().addBasicClass("com.paypal.android.sdk.payments.D",SIGNATURES);
+//    Scene.v().addBasicClass("com.paypal.android.sdk.payments.E",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.L",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.L",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.M",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.N",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.P",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.Q",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.R",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.S",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.T",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.U",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.V",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.W",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.X",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.Y",SIGNATURES);
+//    Scene.v().addBasicClass("io.card.payment.Z",SIGNATURES);
+//    Scene.v().addBasicClass("com.paypal.android.sdk.payments.x",SIGNATURES);
+
 
     for (String analysisClass : AnalysisParameters.v().getAnalysisClasses()) 
     {
