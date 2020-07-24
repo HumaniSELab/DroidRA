@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,7 @@ import soot.Unit;
 import soot.jimple.AssignStmt;
 import soot.jimple.DefinitionStmt;
 import soot.jimple.IdentityStmt;
+import soot.jimple.internal.JInstanceFieldRef;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.scalar.Pair;
 import edu.psu.cse.siis.coal.AnalysisParameters;
@@ -86,11 +88,19 @@ public abstract class BackwardValueAnalysis extends ArgumentValueAnalysis {
         }
       } else if (current instanceof AssignStmt) {
         AssignStmt assignStmt = (AssignStmt) current;
-        if (assignStmt.getLeftOp().equivTo(local)) {
+        if (assignStmt.getLeftOp().equivTo(local) || assignStmt.getLeftOp().toString().contains(local.getName()+".")) {
           if (assignStmt.getRightOp() instanceof Local) {
             result.addAll(findAssignmentsForLocal(current, (Local) assignStmt.getRightOp(), false,
                 visitedUnits));
-          } else {
+          } else if(assignStmt.getRightOp() instanceof JInstanceFieldRef){
+            AssignStmt fieldAssign = backTrace4Field(graph, current, assignStmt.getRightOp().toString());
+            if(null != fieldAssign && fieldAssign.getRightOp() instanceof Local){
+              result.addAll(findAssignmentsForLocal(current, (Local) fieldAssign.getRightOp(), false, visitedUnits));
+            }else{
+              result.add(fieldAssign);
+            }
+          }
+          else {
             result.add(assignStmt);
           }
           // The assignment generates the local on that path.
@@ -103,6 +113,23 @@ public abstract class BackwardValueAnalysis extends ArgumentValueAnalysis {
       }
     }
 
+    return result;
+  }
+
+  private AssignStmt backTrace4Field(ExceptionalUnitGraph graph, Unit trackStart, String s){
+    AssignStmt result = null;
+    boolean flag = true;
+    List<Unit> units = graph.getPredsOf(trackStart);
+    while (flag && CollectionUtils.isNotEmpty(units) && units.size() == 1){
+      Unit current = units.get(0);
+      if(current instanceof AssignStmt){
+        if(((AssignStmt) current).getLeftOp().toString().equals(s)){
+          result = (AssignStmt) current;
+          flag = false;
+        }
+      }
+      units = graph.getPredsOf(current);;
+    }
     return result;
   }
 

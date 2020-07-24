@@ -42,7 +42,6 @@ public class CoalResultAccuracyVerifyServiceImpl implements CoalResultAccuracyVe
                     switch (value.getType()) {
                         case FIELD_CALL:
                             //If you only know the field name and type, you can't find the class it belongs to.
-                            //TODO 2019/9/30 sun
                             break;
                         case METHOD_CALL:
 //                            if(!ApplicationClassFilter.isApplicationClass(clsName)){
