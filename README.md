@@ -33,8 +33,10 @@ Excepting the four DroidBench apps, the remaining apps are currently under the b
 The following is required to set up DroidRA:
 * MAC system
 
-##### Step 1: add iccta-2019-11-12.jar to your laptop
-mvn install:install-file -Dfile=~/DroidRA/res/iccta-2019-11-12.jar -DgroupId=au.monash.edu -DartifactId=iccta -Dversion=2019-11-12 -Dpackaging=jar
+##### Step 1: Load dependencies to your local repository
+git clone git@github.com:MobileSE/DroidRA.git
+cd DroidRA
+./res/loadDependencies.sh
 
 ##### Step 2: build package：
 mvn clean install

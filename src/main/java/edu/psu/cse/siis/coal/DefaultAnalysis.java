@@ -39,6 +39,8 @@ import edu.psu.cse.siis.coal.arguments.ArgumentValueManager;
 import edu.psu.cse.siis.coal.arguments.MethodReturnValueManager;
 import edu.psu.cse.siis.coal.field.transformers.FieldTransformerManager;
 
+import static soot.SootClass.SIGNATURES;
+
 /**
  * A default analysis, which performs constant propagation with the default method argument
  * analyses. Supported field operations are: add, remove, clear and replace. Supported method
@@ -87,6 +89,7 @@ public class DefaultAnalysis<A extends CommandLineArguments> extends Analysis<A>
     Options.v().set_prepend_classpath(true);
 
     Options.v().set_src_prec(Options.src_prec_java);
+
 
     for (String analysisClass : AnalysisParameters.v().getAnalysisClasses()) 
     {
