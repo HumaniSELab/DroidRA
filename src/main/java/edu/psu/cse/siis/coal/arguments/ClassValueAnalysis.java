@@ -18,29 +18,16 @@
  */
 package edu.psu.cse.siis.coal.arguments;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import soot.Local;
-import soot.Scene;
-import soot.SootMethod;
-import soot.Unit;
-import soot.Value;
-import soot.jimple.ClassConstant;
-import soot.jimple.DefinitionStmt;
-import soot.jimple.InvokeExpr;
-import soot.jimple.ParameterRef;
-import soot.jimple.ReturnStmt;
-import soot.jimple.Stmt;
-import soot.jimple.StringConstant;
-import soot.jimple.VirtualInvokeExpr;
+import soot.*;
+import soot.jimple.*;
+import soot.jimple.internal.JInstanceFieldRef;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.toolkits.scalar.Pair;
 import edu.psu.cse.siis.coal.AnalysisParameters;
@@ -78,6 +65,31 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
       return Collections.singleton((Object) TOP_VALUE);
     }
   }
+
+  private List<DefinitionStmt> handleVariableInvoke(Value rhsValue, Unit start, Set<ValueBox> visitedVariables){
+    List<DefinitionStmt> result = new ArrayList<>();
+
+    if(CollectionUtils.isNotEmpty(rhsValue.getUseBoxes())){
+      for (ValueBox useBox : rhsValue.getUseBoxes()) {
+        if(visitedVariables.contains(useBox)){
+          continue;
+        }
+        visitedVariables.add(useBox);
+        if(useBox.getValue() instanceof Local){
+          List<DefinitionStmt> assignmentList = findAssignmentsForLocal(start, (Local) useBox.getValue(), true, new HashSet<Pair<Unit, Local>>());
+          result.addAll(assignmentList);
+          for(DefinitionStmt stmt : assignmentList){
+            Value rop = stmt.getRightOp();
+            if(CollectionUtils.isNotEmpty(rop.getUseBoxes())){
+              result.addAll(handleVariableInvoke(rop, stmt, visitedVariables));
+            }
+          }
+        }
+      }
+    }
+    return result;
+  }
+
 
   /**
    * Processes assignment to local variables that have a class type.
@@ -121,27 +133,39 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
               ArgumentValueManager.v()
                   .getArgumentValueAnalysis(Constants.DefaultArgumentTypes.Scalar.STRING)
                   .computeVariableValues(invokeExpr.getArg(0), assignStmt);
-          if (classNames.contains(TOP_VALUE)) {
+
+          Set<Object> filterClassNames = classNames.stream().filter(item->{
+            return !item.toString().equals(TOP_VALUE) && !item.toString().equals(Constants.NULL_STRING);
+          }).collect(Collectors.toSet());
+          if(CollectionUtils.isNotEmpty(filterClassNames)){
+            result.addAll(filterClassNames);
+          }else{
             return Collections.singleton((Object) TOP_VALUE);
-          } else {
-            result.addAll(classNames);
           }
+
         } else if (method.getSignature().equals("<java.lang.Object: java.lang.Class getClass()>")) {
           VirtualInvokeExpr virtualInvokeExpr = (VirtualInvokeExpr) invokeExpr;
           if (logger.isDebugEnabled()) {
             logger.debug("Returning " + virtualInvokeExpr.getBase().getType().toString());
           }
+
+          //Optimize DroidRA to enhance accuracy by back tracing Local value
+          Set<Object> specificClassName = backTraceLocal(visitedStmts, assignStmt, virtualInvokeExpr);
+          if (specificClassName != null) return specificClassName;
+
           return Collections.singleton((Object) virtualInvokeExpr.getBase().getType().toString());
         } else {
           Set<Object> constantClasses = handleInvokeExpression(assignStmt, visitedStmts);
           if (constantClasses == null) {
-            return Collections.singleton((Object) TOP_VALUE);
+            result.addAll(Collections.singleton((Object) TOP_VALUE));
+            //return Collections.singleton((Object) TOP_VALUE);
           } else {
             result.addAll(constantClasses);
           }
         }
       } else {
-        return Collections.singleton((Object) TOP_VALUE);
+        result.addAll(Collections.singleton((Object) TOP_VALUE));
+        //return Collections.singleton((Object) TOP_VALUE);
       }
     }
 
@@ -149,6 +173,30 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
       return Collections.singleton((Object) TOP_VALUE);
     }
     return result;
+  }
+
+  private Set<Object> backTraceLocal(Set<Stmt> visitedStmts, DefinitionStmt assignStmt, VirtualInvokeExpr virtualInvokeExpr) {
+    List<DefinitionStmt> assignmentList = findAssignmentsForLocal(assignStmt,(Local)virtualInvokeExpr.getBase(), true, new HashSet<Pair<Unit, Local>>());
+    //process assignStmts
+    List<DefinitionStmt> enrichAssignmentList = new ArrayList<>();
+    enrichAssignmentList.addAll(assignmentList);
+    for (DefinitionStmt as : assignmentList) {
+      Value rv = as.getRightOp();
+      if (CollectionUtils.isNotEmpty(rv.getUseBoxes())) {
+        List<DefinitionStmt> additionalAssignments = handleVariableInvoke(rv, as, new HashSet<>());
+        enrichAssignmentList.addAll(additionalAssignments);
+      }
+    }
+
+    Set<Object> objects = processClassAssignments(enrichAssignmentList, visitedStmts);
+
+    if(CollectionUtils.isNotEmpty(objects)){
+        List<Object> specificClassName = objects.stream().filter(ob->{ return !ob.toString().equals(TOP_VALUE) && !ob.toString().equals(Constants.NULL_STRING); }).collect(Collectors.toList());
+        if(CollectionUtils.isNotEmpty(specificClassName)){
+            return Collections.singleton((Object) specificClassName.get(0).toString());
+        }
+    }
+    return null;
   }
 
   /**
