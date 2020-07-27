@@ -90,7 +90,6 @@ public class DefaultAnalysis<A extends CommandLineArguments> extends Analysis<A>
 
     Options.v().set_src_prec(Options.src_prec_java);
 
-
     for (String analysisClass : AnalysisParameters.v().getAnalysisClasses()) 
     {
     	try

@@ -116,10 +116,12 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
           InvokeExpr invokeExpr = edge.srcStmt().getInvokeExpr();
           Set<Object> newResults =
               computeVariableValues(invokeExpr.getArg(parameterRef.getIndex()), edge.srcStmt());
-          if (newResults.contains(TOP_VALUE) || newResults.contains(Constants.ANY_STRING)) {
-            return Collections.singleton((Object) TOP_VALUE);
-          } else {
-            result.addAll(newResults);
+
+          List<Object> filterNewResults = newResults.stream().filter(ob->{ return !ob.toString().equals(TOP_VALUE) && !ob.toString().equals(Constants.NULL_STRING); }).collect(Collectors.toList());
+          if(CollectionUtils.isNotEmpty(filterNewResults)){
+            result.addAll(filterNewResults);
+          }else {
+            result.addAll(Collections.singleton((Object) TOP_VALUE));
           }
         }
       } else if (rhsValue instanceof InvokeExpr) {
@@ -127,20 +129,22 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
         SootMethod method = invokeExpr.getMethod();
         if (method.getSignature().equals(
             "<java.lang.Class: java.lang.Class forName(java.lang.String)>")
-            || method.getSignature().equals(
+                || method.getSignature().equals(
+                "<java.lang.Class: java.lang.Class forName(java.lang.String,boolean,java.lang.ClassLoader)>")
+                || method.getSignature().equals(
                 "<java.lang.ClassLoader: java.lang.Class loadClass(java.lang.String)>")) {
-          Set<Object> classNames =
-              ArgumentValueManager.v()
-                  .getArgumentValueAnalysis(Constants.DefaultArgumentTypes.Scalar.STRING)
-                  .computeVariableValues(invokeExpr.getArg(0), assignStmt);
+          Set<Object> classNames = ArgumentValueManager.v()
+                            .getArgumentValueAnalysis(Constants.DefaultArgumentTypes.Scalar.STRING)
+                            .computeVariableValues(invokeExpr.getArg(0), assignStmt);
 
           Set<Object> filterClassNames = classNames.stream().filter(item->{
             return !item.toString().equals(TOP_VALUE) && !item.toString().equals(Constants.NULL_STRING);
-          }).collect(Collectors.toSet());
+          }).map(item2->{ return item2.toString().replace("(.*)",""); }).collect(Collectors.toSet());
+
           if(CollectionUtils.isNotEmpty(filterClassNames)){
             result.addAll(filterClassNames);
           }else{
-            return Collections.singleton((Object) TOP_VALUE);
+            result.addAll(Collections.singleton((Object) TOP_VALUE));
           }
 
         } else if (method.getSignature().equals("<java.lang.Object: java.lang.Class getClass()>")) {
@@ -233,8 +237,8 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
                   findAssignmentsForLocal(returnStmt, (Local) returnValue, true,
                       new HashSet<Pair<Unit, Local>>());
               Set<Object> classConstants = processClassAssignments(assignStmts, visitedStmts);
-              if (classConstants == null || classConstants.contains(TOP_VALUE)
-                  || classConstants.contains(Constants.ANY_STRING)) {
+              if (classConstants == null || classConstants.equals(TOP_VALUE)
+                  || classConstants.equals(Constants.ANY_STRING)) {
                 return null;
               } else {
                 result.addAll(classConstants);

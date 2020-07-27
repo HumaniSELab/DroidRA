@@ -53,6 +53,7 @@ public class SootSetup {
 //        PhaseOptions.v().setPhaseOption("wjtp.rdc", "enabled:true");
 
         Options.v().set_soot_classpath(getClasspath(config));
+        Options.v().set_whole_program(true);
         soot.Main.v().autoSetOptions();
         configureCallgraph(config);
 
