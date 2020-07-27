@@ -41,14 +41,9 @@ The following is required to set up DroidRA:
 ##### Step 2: build package：
 mvn clean install
 
-##### Step 3: example of running DroidRA(4 parameters):
-* If you want to run DroidRA with prunning analysis, then you should set 4 parameters as inputs：
-~/lastest_version.apk
-~/android-platforms/android-17/android.jar
-true
-~/last_version.apk
-
-* If you want to run DroidRA without prunning analysis, then you should set 3 parameters as inputs：
-~/lastest_version.apk
+##### Step 3: example of running DroidRA(3 parameters):
+* Three parameters are needed here: [your_apk_path.apk],[path of android.jar],[false]
+* specific Example:
+~/your_apk_path.apk
 ~/android-platforms/android-17/android.jar
 false
