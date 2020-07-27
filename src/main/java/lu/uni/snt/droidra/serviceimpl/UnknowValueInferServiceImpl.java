@@ -40,7 +40,7 @@ public class UnknowValueInferServiceImpl implements UnknowValueInferService {
                 String cls = clsDesc.cls;
 
                 return StringUtils.isNotBlank(name) && !name.equals(DroidRAConstant.STAR_SYMBOL)
-                        && (StringUtils.equals(cls, DroidRAConstant.STAR_SYMBOL) || cls.contains(DroidRAConstant.STAR_SYMBOL))
+                        && (StringUtils.equals(cls, DroidRAConstant.STAR_SYMBOL) || cls.contains(DroidRAConstant.STAR_SYMBOL) || cls.contains("java.lang.Object"))
                         && !clsDesc.cls.contains(DroidRAConstant.OPTIMIZED);
             }).forEach(clsDesc -> {
                 //use known field/method to guess className
@@ -130,9 +130,6 @@ public class UnknowValueInferServiceImpl implements UnknowValueInferService {
                     case FIELD_CALL:
 
                         Type returnType = key.getStmt().getInvokeExpr().getMethod().getReturnType();
-                        if (returnType.equals("java.lang.Object")) {
-                            break;
-                        }
                         Set<FieldTypesValue> fieldTypesValues = classNameFieldTypesMap.get(clsDesc.cls);
                         if (null != fieldTypesValues && fieldTypesValues.size() > 0) {
                             oldSet.add(clsDesc);

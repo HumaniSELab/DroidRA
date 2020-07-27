@@ -18,20 +18,20 @@
  */
 package edu.psu.cse.siis.coal.arguments;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
+import edu.psu.cse.siis.coal.AnalysisParameters;
+import edu.psu.cse.siis.coal.Constants;
+import edu.psu.cse.siis.coal.arguments.LanguageConstraints.Call;
 import soot.Local;
 import soot.Value;
 import soot.jimple.NullConstant;
 import soot.jimple.Stmt;
 import soot.jimple.StringConstant;
 import soot.toolkits.graph.ExceptionalUnitGraph;
-import edu.psu.cse.siis.coal.AnalysisParameters;
-import edu.psu.cse.siis.coal.Constants;
-import edu.psu.cse.siis.coal.arguments.LanguageConstraints.Call;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * An argument value analysis for string types.

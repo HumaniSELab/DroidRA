@@ -6,7 +6,7 @@ public class DroidRAConstant {
 
     public final static String INACCURATE = "[INACCURATE]";
 
-    public final static String OPTIMIZED = "[OPTIMIZED]";
+    public final static String OPTIMIZED = "";
 
 
 }
