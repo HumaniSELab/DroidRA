@@ -107,7 +107,34 @@ public class Main
 		String apkPath = args[0];
 		String forceAndroidJar = args[1];
 		String incrementalAnalysisSwitchOn = args[2];
+		String[] simiDroidArgs = simiDroidAnalysis(args, forceAndroidJar, incrementalAnalysisSwitchOn);
 
+		//calculate EntryPoint to generate dummyMainMethod
+		try {
+			calculateEntryPoint(apkPath, forceAndroidJar, incrementalAnalysisSwitchOn, simiDroidArgs);
+		} catch (IOException | XmlPullParserException e) {
+			e.printStackTrace();
+			System.out.println("==>calculateEntryPoint error:" + e);
+		}
+
+		long afterDummyMain = System.currentTimeMillis();
+		System.out.println("==>afterDummyMain TIME:" + afterDummyMain);
+
+		reflectionAnalysis();
+		toJson();
+
+		long afterRA = System.currentTimeMillis();
+		System.out.println("==>afterRA TIME:" + afterRA);
+		
+		booster();
+		
+		long afterBooster = System.currentTimeMillis();
+		System.out.println("==>afterBooster TIME:" + afterBooster);
+		
+		System.out.println("====>TIME_TOTAL:" + startTime + "," + afterDummyMain + "," + afterRA + "," + afterBooster);
+	}
+
+	private static String[] simiDroidAnalysis(String[] args, String forceAndroidJar, String incrementalAnalysisSwitchOn) {
 		//simiDroid Analysis
 		String[] simiDroidArgs = new String[0];
 		if(StringUtils.isNotBlank(incrementalAnalysisSwitchOn) && incrementalAnalysisSwitchOn.equalsIgnoreCase("TRUE")){
@@ -124,34 +151,7 @@ public class Main
 				System.out.println("==>simiDroid Analysis error:" + e);
 			}
 		}
-
-		//calculate EntryPoint to generate dummyMainMethod
-		try {
-			calculateEntryPoint(apkPath, forceAndroidJar, incrementalAnalysisSwitchOn, simiDroidArgs);
-		} catch (IOException | XmlPullParserException e) {
-			e.printStackTrace();
-			System.out.println("==>calculateEntryPoint error:" + e);
-		}
-		// sunxiaobiu: 14/10/19 change init to new FlowDroid Setup Method
-		//init(apkPath, forceAndroidJar, null);
-
-		long afterDummyMain = System.currentTimeMillis();
-		System.out.println("==>afterDummyMain TIME:" + afterDummyMain);
-
-		reflectionAnalysis();
-		//toReadableText(apkName);
-		toJson();
-		
-
-		long afterRA = System.currentTimeMillis();
-		System.out.println("==>afterRA TIME:" + afterRA);
-		
-//		booster();
-		
-		long afterBooster = System.currentTimeMillis();
-		System.out.println("==>afterBooster TIME:" + afterBooster);
-		
-		System.out.println("====>TIME_TOTAL:" + startTime + "," + afterDummyMain + "," + afterRA + "," + afterBooster);
+		return simiDroidArgs;
 	}
 
 	public static int test()
