@@ -63,6 +63,29 @@
         </dependency>
         <dependency>
             <groupId>de.tud.sse</groupId>
+            <artifactId>soot-infoflow</artifactId>
+            <version>2.7.1</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>heros</artifactId>
+                    <groupId>de.upb.cs.swt</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>soot</artifactId>
+                    <groupId>ca.mcgill.sable</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jasmin</artifactId>
+                    <groupId>ca.mcgill.sable</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.tud.sse</groupId>
             <artifactId>soot-infoflow-android</artifactId>
             <version>2.7.1</version>
             <exclusions>
@@ -85,6 +108,10 @@
                 <exclusion>
                     <artifactId>axml</artifactId>
                     <groupId>pxb.android</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>de.tud.sse</groupId>
+                    <artifactId>soot-infoflow</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

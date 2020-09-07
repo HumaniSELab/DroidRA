@@ -1,0 +1,461 @@
+Patterns of Reflective Calls.(Sequence pattern : Occurences)
+forName-> getMethod-> invoke : 633
+getDeclaredField-> setAccessible-> get : 205
+forName-> getConstructor-> newInstance : 169
+getDeclaredField-> setAccessible-> set : 137
+getDeclaredMethod-> setAccessible-> invoke : 121
+forName-> getDeclaredMethod-> invoke : 115
+getName-> getReturnType-> invoke : 101
+getDeclaredField-> get-> getDeclaredMethod-> invoke : 86
+getDeclaredFields-> getDeclaredFields-> getName-> getInt : 70
+forName-> getDeclaredField-> get : 68
+forName-> getConstructor-> newInstance-> getMethod : 65
+getMethod-> getDeclaredMethod-> forName : 64
+getDeclaredMethods-> getName-> invoke : 64
+newInstance-> invoke-> getInt-> getField : 62
+getDeclaredConstructor-> setAccessible-> newInstance : 58
+forName-> getField-> getInt : 54
+getFields-> isAnnotationPresent-> getType-> get-> getName : 52
+forName-> newInstance-> getDeclaredField-> setAccessible-> set : 51
+getDeclaredField-> setAccessible-> get-> getMethods-> getName-> invoke : 44
+getMethods-> getDeclaredMethods-> getDeclaredMethod-> getMethod : 42
+forName-> getFields-> getName : 40
+getMethods-> getName-> getParameterTypes : 36
+getMethod-> getDeclaredMethod-> setAccessible : 33
+forName-> getMethod-> invoke-> getDeclaredField-> setAccessible-> get : 32
+forName-> getDeclaredFields-> getDeclaredFields-> getName-> getInt : 31
+getConstructor-> newInstance-> getMethod-> invoke : 31
+forName-> getDeclaredConstructor-> setAccessible-> newInstance : 30
+getDeclaredMethods-> getName-> getParameterTypes : 29
+getMethod-> invoke-> getField-> get : 28
+forName-> getField-> get : 28
+getFields-> getName-> get : 28
+getDeclaredMethods-> getAnnotation-> getParameterTypes-> getName : 28
+forName-> getField-> get-> getDeclaredMethod-> invoke : 27
+forName-> newInstance-> getDeclaredField-> get : 27
+getField-> getType-> getModifiers-> get-> getMethod-> getModifiers-> invoke-> getReturnType : 27
+getModifiers-> getParameterTypes-> getReturnType-> getName : 27
+getDeclaredField-> get-> newInstance : 27
+get-> getType-> getModifiers-> getName : 27
+getField-> getType-> set-> getMethod-> getReturnType-> invoke : 27
+getName-> getParameterTypes-> getModifiers-> getReturnType : 27
+getDeclaredMethods-> getDeclaredConstructors-> getDeclaringClass-> getMethods-> getDeclaringClass-> getConstructors : 27
+loadClass-> getDeclaredField-> set : 27
+getFields-> getModifiers-> getName-> getInt : 27
+getDeclaredFields-> getName-> getType-> getModifiers-> getFields : 27
+getFields-> getModifiers-> getName-> getType-> get : 27
+invoke-> get-> getInt : 26
+forName-> getMethod-> getField-> getFields-> getModifiers-> getName-> getInt : 26
+getMethods-> getParameterTypes-> getName-> invoke : 26
+loadClass-> getDeclaredMethod-> invoke : 25
+forName-> getDeclaredConstructor-> newInstance : 25
+getAnnotations-> getGenericParameterTypes-> getParameterAnnotations : 24
+forName-> getMethod-> getDeclaredField-> getInt-> invoke : 22
+forName-> setAccessible-> invoke : 21
+forName-> getDeclaredField-> setAccessible : 20
+getMethod-> setAccessible-> invoke : 20
+getDeclaredField-> setAccessible-> getInt-> get-> set : 20
+forName-> getDeclaredMethod-> setAccessible-> invoke : 20
+getDeclaredField-> setAccessible-> getInt : 19
+getMethods-> getName-> invoke : 18
+forName-> getDeclaredConstructors-> setAccessible-> newInstance : 18
+getMethods-> getParameterTypes-> getReturnType : 18
+loadClass-> getConstructor-> newInstance : 17
+getMethods-> getName-> getParameterTypes-> getReturnType : 17
+getDeclaringClass-> getName-> getDeclaringClass-> getName : 17
+getDeclaredMethod-> isAccessible-> setAccessible-> invoke : 17
+getDeclaredMethods-> getAnnotation-> getName : 16
+getMethods-> getName-> getParameterTypes-> getReturnType-> isAnnotationPresent-> getDeclaringClass-> getAnnotation-> toString : 16
+getMethod-> getReturnType-> getDeclaredMethod-> setAccessible-> getField-> getType : 16
+getName-> getParameterTypes-> getAnnotation-> getReturnType-> getGenericReturnType : 16
+forName-> newInstance-> getDeclaredField-> setAccessible-> set-> getField : 16
+getField-> get-> set : 16
+getConstructor-> isAccessible-> setAccessible-> newInstance : 15
+getConstructor-> getDeclaredConstructor-> setAccessible : 15
+getParameterTypes-> getDeclaredAnnotations-> getParameterAnnotations : 15
+getFields-> getModifiers-> getType-> getName-> getInt : 14
+loadClass-> getMethod-> invoke : 14
+getModifiers-> isSynthetic-> isBridge-> getParameterTypes : 14
+getDeclaredFields-> getName-> getDeclaredAnnotations : 14
+getDeclaredMethods-> getMethods-> getModifiers-> getName-> getParameterTypes-> invoke : 13
+getParameterTypes-> getParameterAnnotations-> getDeclaredAnnotations-> getDeclaringClass : 13
+forName-> getDeclaredField-> setAccessible-> get : 13
+getModifiers-> getParameterTypes-> getReturnType : 13
+getDeclaredFields-> getName-> getType-> setAccessible : 13
+getDeclaredFields-> getName-> setAccessible-> get : 13
+getDeclaredMethods-> getModifiers-> getParameterTypes : 13
+getDeclaredConstructor-> isAccessible-> setAccessible : 13
+getDeclaringClass-> getName-> getParameterTypes : 12
+isAccessible-> setAccessible-> newInstance : 12
+getField-> getDeclaredField-> setAccessible : 12
+forName-> getDeclaredField-> getInt-> get : 11
+getDeclaredConstructors-> getParameterTypes-> getDeclaredMethods-> getModifiers : 11
+forName-> getConstructor-> newInstance-> getMethod-> invoke : 10
+forName-> getDeclaredField-> setAccessible-> get-> getMethod-> getDeclaredMethod-> setAccessible-> invoke : 10
+getDeclaredMethods-> getAnnotation-> setAccessible-> invoke : 9
+getType-> isAnnotationPresent-> getAnnotation : 9
+getDeclaredFields-> isAnnotationPresent-> getModifiers-> getAnnotation : 9
+getModifiers-> isAccessible-> getDeclaringClass-> setAccessible : 9
+getModifiers-> isSynthetic-> getAnnotation-> getType : 8
+forName-> getDeclaredField-> get-> getDeclaredMethod-> invoke-> getDeclaredConstructor-> newInstance-> setAccessible : 8
+getTypeParameters-> getGenericSuperclass-> getGenericInterfaces-> getGenericSuperclass : 8
+isAccessible-> setAccessible-> invoke : 8
+getDeclaredFields-> getModifiers-> setAccessible-> get-> getName : 8
+getDeclaredFields-> setAccessible-> getGenericType-> getGenericSuperclass : 8
+getDeclaredFields-> getModifiers-> getName-> getType : 7
+getDeclaredMethods-> getModifiers-> getName-> getReturnType-> getParameterTypes : 7
+getDeclaredMethods-> getName-> setAccessible : 7
+getAnnotations-> getMethod-> invoke : 7
+getFields-> getName-> getInt : 7
+getType-> getName-> getDeclaredMethod-> invoke-> getGenericType-> isAccessible-> setAccessible : 7
+getDeclaringClass-> getName-> invoke : 6
+getFields-> getModifiers-> setAccessible-> get-> getName-> getAnnotation : 6
+getDeclaredMethods-> getAnnotation-> getName-> getDeclaredFields-> getAnnotation-> getName : 6
+loadClass-> getField-> getInt : 6
+isAccessible-> set-> setAccessible : 6
+invoke-> getDeclaringClass-> getName-> setAccessible-> set-> getType : 6
+getDeclaredField-> setAccessible-> get-> set : 6
+getMethod-> invoke-> getFields-> getName-> get : 6
+getType-> getGenericType-> getName : 6
+getDeclaredFields-> getType-> get : 6
+getDeclaredMethod-> setAccessible-> invoke-> getField-> get : 6
+forName-> getDeclaredField-> setAccessible-> getAnnotation-> get : 6
+forName-> newInstance-> getDeclaredConstructor : 6
+getDeclaredConstructors-> getParameterTypes-> isAccessible-> setAccessible : 6
+getDeclaringClass-> getName-> setAccessible-> set-> getType : 6
+setAccessible-> getType-> set : 6
+loadClass-> getFields-> getModifiers-> getName-> setAccessible-> getField-> getInt-> setInt : 6
+getDeclaredConstructor-> setAccessible-> newInstance-> getField-> getGenericType-> getType-> set-> get-> getMethod-> invoke : 6
+isAccessible-> get-> setAccessible : 6
+getDeclaredMethods-> getName-> getModifiers-> getParameterTypes : 5
+getDeclaredField-> setAccessible-> get-> getInt : 5
+setAccessible-> getName-> get : 5
+isAnnotationPresent-> getName-> getAnnotation : 5
+getDeclaringClass-> getType-> getMethod-> getReturnType : 5
+forName-> getDeclaredFields-> getModifiers-> get : 5
+getDeclaredFields-> getType-> setAccessible-> get : 5
+loadClass-> newInstance-> forName : 5
+getName-> setAccessible-> set : 5
+getType-> getName-> getGenericType : 5
+setAccessible-> getType-> get-> getDeclaredField : 5
+getDeclaredFields-> getAnnotation-> setAccessible-> set : 5
+forName-> getDeclaredMethod-> setAccessible : 5
+getDeclaringClass-> getMethod-> getReturnType-> getType : 5
+forName-> newInstance-> getDeclaredMethods-> getName-> invoke : 5
+getName-> getParameterTypes-> getReturnType : 5
+getFields-> getModifiers-> getAnnotation-> get-> getType-> getName : 5
+getGenericInterfaces-> getTypeParameters-> getGenericSuperclass : 5
+getName-> getMethod-> invoke : 5
+getTypeParameters-> getGenericSuperclass-> getGenericInterfaces : 5
+getDeclaredMethod-> getReturnType-> invoke-> getField-> getAnnotation : 5
+getDeclaredMethods-> getModifiers-> getParameterTypes-> getAnnotation-> getMethods-> isAnnotationPresent-> getDeclaringClass-> getName : 5
+getDeclaredConstructor-> setAccessible-> newInstance-> getFields-> getModifiers-> getName-> set : 5
+setAccessible-> getType-> set-> getMethod-> invoke-> getName : 5
+getReturnType-> invoke-> getName : 4
+getDeclaredMethods-> isBridge-> isAnnotationPresent-> getParameterTypes-> getModifiers-> getReturnType : 4
+getMethod-> getModifiers-> invoke : 4
+getDeclaredMethods-> getMethods-> getModifiers-> getParameterTypes-> getAnnotation-> isAnnotationPresent-> getDeclaringClass-> getName : 4
+getType-> setAccessible-> get : 4
+getAnnotation-> getName-> getType-> getGenericType : 4
+forName-> getField-> getMethod : 4
+isAnnotationPresent-> getName-> setAccessible-> get : 4
+forName-> getConstructor-> newInstance-> getMethod-> invoke-> getDeclaredField-> get : 4
+getDeclaredFields-> getName-> setAccessible-> set : 4
+forName-> getMethod-> getDeclaredField-> get-> invoke : 4
+isEnumConstant-> getAnnotation-> getName : 4
+getMethods-> getName-> setAccessible : 4
+getDeclaredFields-> getName-> getModifiers-> get : 4
+getDeclaredMethod-> isAccessible-> setAccessible : 4
+getMethods-> getName-> isSynthetic-> getParameterTypes : 4
+forName-> getDeclaredField-> isAccessible-> get-> setAccessible : 4
+getAnnotations-> getName-> getMethod-> invoke-> getType : 4
+setAccessible-> getName-> getInt : 4
+isAnnotationPresent-> getParameterTypes-> getDeclaringClass-> getName-> getReturnType : 4
+getDeclaredFields-> getType-> get-> set : 4
+getType-> setAccessible-> set : 4
+getDeclaredMethods-> getAnnotation-> getParameterTypes-> setAccessible-> invoke : 4
+getConstructor-> newInstance-> newInstance : 3
+getDeclaredMethods-> getName-> getDefaultValue : 3
+getName-> getAnnotation-> getType-> getGenericType : 3
+getParameterTypes-> getReturnType-> getName : 3
+getGenericParameterTypes-> getGenericParameterTypes-> getGenericReturnType : 3
+getDeclaredFields-> get-> getName : 3
+getDeclaredFields-> isAnnotationPresent-> getModifiers-> getType-> getDeclaringClass-> getAnnotation : 3
+setAccessible-> getParameterTypes-> getName : 3
+getDeclaredFields-> getName-> getType : 3
+getName-> getParameterTypes-> getDeclaredMethod : 3
+forName-> getDeclaredConstructors-> getParameterTypes : 3
+getConstructors-> getParameterTypes-> setAccessible : 3
+getDeclaredField-> getType-> setAccessible-> get-> set : 3
+getDeclaredMethods-> isAnnotationPresent-> getAnnotation : 3
+getAnnotation-> getName-> getType-> newInstance-> getGenericType : 3
+getType-> getDeclaringClass-> getName-> setAccessible-> set : 3
+getDeclaredField-> setAccessible-> get-> getDeclaredConstructor-> setAccessible : 3
+getDeclaredMethods-> getMethods-> getName-> getParameterTypes : 3
+getModifiers-> isSynthetic-> isAccessible-> getAnnotation-> setAccessible-> getType : 3
+getDeclaredField-> setAccessible-> get-> getDeclaredMethod-> setAccessible-> invoke : 3
+forName-> getMethod-> newInstance-> invoke : 3
+forName-> getDeclaredMethod-> getMethod : 3
+getName-> getParameterTypes-> getReturnType-> loadClass-> newInstance-> getModifiers-> defineClass : 3
+loadClass-> newInstance-> getDeclaredConstructor-> getModifiers-> defineClass : 3
+getAnnotations-> getName-> getMethod-> invoke : 3
+getDeclaredFields-> getModifiers-> isAnnotationPresent-> getAnnotation : 3
+getReturnType-> getParameterTypes-> getParameterTypes : 3
+getDeclaredField-> setAccessible-> get-> invoke : 3
+get-> getDeclaredField-> setAccessible : 3
+getGenericReturnType-> getGenericParameterTypes-> getName : 3
+forName-> getFields-> get : 3
+loadClass-> getConstructor-> setAccessible-> newInstance-> getDeclaredMethod-> invoke-> getField-> set : 3
+getDeclaredConstructor-> isAccessible-> setAccessible-> newInstance : 3
+getDeclaredFields-> isAccessible-> setAccessible-> get : 3
+getMethods-> getName-> getModifiers-> getParameterTypes : 3
+loadClass-> getDeclaredConstructor-> setAccessible-> newInstance : 3
+getReturnType-> getParameterTypes-> getName : 3
+forName-> getMethod-> invoke-> getDeclaredField-> setAccessible-> get-> getBoolean : 3
+getDeclaredFields-> isAnnotationPresent-> getAnnotation-> getName : 3
+forName-> getDeclaredConstructor-> newInstance-> newInstance : 3
+getName-> getType-> setAccessible : 3
+getDeclaredFields-> getModifiers-> invoke : 3
+forName-> getDeclaredConstructor-> setAccessible-> getMethod-> newInstance-> invoke : 3
+getDeclaredFields-> getType-> setAccessible-> set : 3
+getDeclaredField-> setAccessible-> set-> getMethod-> invoke : 3
+loadClass-> newInstance-> getMethod-> invoke : 3
+forName-> newInstance-> getField-> get : 3
+getParameterTypes-> getParameterAnnotations-> getName : 3
+getDeclaredFields-> getModifiers-> getName-> getType-> loadClass-> newInstance-> defineClass : 3
+forName-> getFields-> getName-> get : 3
+getGenericReturnType-> getGenericParameterTypes-> getGenericParameterTypes : 3
+isAnnotationPresent-> getAnnotation-> getDeclaringClass-> getName-> getType : 3
+getMethod-> getDeclaredMethod-> setAccessible-> getReturnType-> getField-> getType : 3
+getType-> getGenericType-> getName-> isAnnotationPresent : 3
+getDeclaredMethods-> getName-> isAnnotationPresent-> getAnnotation : 3
+getDeclaredField-> setAccessible-> setBoolean : 3
+getDeclaredConstructor-> setAccessible-> forName-> getMethod-> invoke-> newInstance : 3
+forName-> getDeclaredFields-> getAnnotation-> getName-> getField : 2
+getFields-> getMethods-> getModifiers-> getName-> getType-> get-> getName-> getMethod-> invoke : 2
+forName-> getDeclaredField-> get-> getMethod : 2
+getDeclaredFields-> isAnnotationPresent-> getName-> getAnnotation-> set-> getType : 2
+getName-> getModifiers-> getDeclaringClass-> getParameterTypes : 2
+getReturnType-> getType-> getName : 2
+getField-> setAccessible-> get : 2
+getMethod-> invoke-> forName-> getField-> get : 2
+forName-> getDeclaredField-> get-> getMethod-> getField-> invoke : 2
+setAccessible-> invoke-> getDeclaredMethod : 2
+forName-> getField-> getMethod-> invoke-> get : 2
+getDeclaredFields-> getAnnotation-> getName-> getType : 2
+getDeclaredConstructors-> getParameterTypes-> getDeclaredMethods-> getModifiers-> getParameterTypes : 2
+getDeclaredFields-> isAnnotationPresent-> getType-> get : 2
+getName-> forName-> getMethod-> invoke : 2
+getDeclaredFields-> setAccessible-> getGenericType-> getAnnotation-> getGenericSuperclass : 2
+getDeclaredField-> getModifiers-> setAccessible-> setBoolean : 2
+getDeclaredMethod-> setAccessible-> getDeclaredField-> setAccessible : 2
+getDeclaredMethods-> invoke-> getName : 2
+getDeclaredFields-> setAccessible-> get-> set : 2
+forName-> getDeclaredConstructor-> newInstance-> getMethod-> invoke-> getDeclaredMethod : 2
+getFields-> isAnnotationPresent-> getName : 2
+getField-> getInt-> invoke : 2
+getAnnotation-> getType-> getGenericType : 2
+loadClass-> newInstance-> get-> set : 2
+getDeclaredMethod-> getName-> getParameterTypes : 2
+forName-> getField-> getBoolean-> getMethod-> invoke : 2
+forName-> getConstructor-> newInstance-> getField-> set-> getMethod-> invoke : 2
+getDeclaringClass-> getMethod-> getType : 2
+loadClass-> getField-> get : 2
+isAnnotationPresent-> getType-> setAccessible-> set : 2
+getFields-> getName-> getType-> get : 2
+getType-> getModifiers-> isSynthetic-> getAnnotation : 2
+forName-> loadClass-> newInstance : 2
+forName-> getMethod-> getField-> get : 2
+set-> getInt-> setInt : 2
+getDeclaredField-> getField-> get-> set : 2
+getFields-> getAnnotation-> set : 2
+getDeclaredField-> setAccessible-> forName-> getDeclaredMethod-> setAccessible-> get-> invoke : 2
+newInstance-> invoke-> getField-> getInt : 2
+forName-> getDeclaredMethod-> invoke-> getMethod : 2
+forName-> getDeclaredConstructor-> setAccessible-> getDeclaredMethod-> setAccessible : 2
+forName-> getDeclaredField-> setAccessible-> set : 2
+getMethods-> getAnnotation-> getName-> getParameterTypes : 2
+invoke-> forName-> getDeclaredMethod : 2
+getDeclaredField-> setAccessible-> get-> getDeclaredMethod-> invoke : 2
+forName-> newInstance-> getDeclaredFields-> getName-> set-> getType-> getGenericSuperclass : 2
+getType-> getName-> getGenericType-> getGenericSuperclass : 2
+setAccessible-> isAccessible-> getModifiers : 2
+forName-> getDeclaredField-> getInt : 2
+getField-> get-> forName : 2
+getParameterTypes-> getName-> invoke : 2
+getFields-> getType-> get-> getName : 2
+getDeclaredFields-> getType-> getInt-> getName : 2
+getAnnotation-> getName-> getType : 2
+getDeclaredMethod-> forName-> invoke : 1
+getDeclaredField-> isAccessible-> setAccessible : 1
+getDeclaredFields-> getType-> getName-> getDeclaredField-> setAccessible-> get : 1
+getDeclaredFields-> isAnnotationPresent-> getModifiers-> setAccessible-> getGenericType-> getAnnotations-> isAnnotationPresent-> getDeclaredConstructor-> getModifiers-> setAccessible-> getGenericParameterTypes-> getParameterAnnotations : 1
+getFields-> getName-> getType-> set : 1
+getField-> isAnnotationPresent-> getAnnotation : 1
+setAccessible-> getType-> get-> get-> set-> get-> get-> setAccessible : 1
+getMethods-> getName-> isAnnotationPresent-> getAnnotation : 1
+getDeclaredField-> getDeclaredFields-> getType-> getDeclaredMethods-> getReturnType-> getParameterTypes-> invoke : 1
+getDeclaredMethods-> isAnnotationPresent-> getAnnotation-> getAnnotations : 1
+getGenericReturnType-> getReturnType-> getDefaultValue : 1
+getModifiers-> isSynthetic-> getParameterTypes-> getReturnType-> getName-> toGenericString : 1
+getFields-> getName-> isAnnotationPresent : 1
+getDeclaredFields-> getName-> isAnnotationPresent : 1
+getMethod-> isAccessible-> setAccessible-> invoke : 1
+forName-> getDeclaredField-> get-> getDeclaredMethod : 1
+getGenericParameterTypes-> getParameterAnnotations-> isVarArgs : 1
+getDeclaredFields-> isSynthetic-> get-> isAnnotationPresent-> getType-> getName : 1
+getModifiers-> getName-> getDeclaringClass-> getParameterTypes-> getExceptionTypes-> getReturnType-> getModifiers-> getDeclaringClass-> getParameterTypes-> getExceptionTypes : 1
+get-> getFloat-> getInt : 1
+setAccessible-> getType-> get-> get-> get-> get : 1
+getGenericParameterTypes-> getDeclaringClass-> getParameterAnnotations-> isVarArgs : 1
+loadClass-> getDeclaredConstructor-> newInstance : 1
+forName-> getMethod-> invoke-> getField-> get : 1
+getDeclaredFields-> isSynthetic-> isAccessible-> setAccessible-> get : 1
+getDeclaredField-> getType-> setAccessible-> set : 1
+forName-> getDeclaredField-> setAccessible-> get-> getMethod-> invoke : 1
+getDeclaredConstructors-> getDeclaredAnnotations-> getParameterAnnotations-> getParameterTypes : 1
+forName-> getDeclaredMethod-> setAccessible-> getDeclaredField-> setAccessible-> get-> invoke : 1
+getAnnotation-> getName-> getDeclaringClass : 1
+getAnnotation-> getType-> newInstance-> getGenericType : 1
+getDeclaredConstructor-> setAccessible-> newInstance-> getFields-> getName-> set : 1
+getDeclaredField-> setAccessible-> getBoolean : 1
+setAccessible-> getType-> set-> getName : 1
+set-> setInt-> invoke : 1
+forName-> getDeclaredFields-> getDeclaredMethods-> getReturnType-> getParameterTypes-> setAccessible-> invoke-> getType-> getGenericType-> getFields-> setAccessible-> get-> set : 1
+getDeclaredFields-> getType-> getAnnotation-> getName-> set : 1
+forName-> getMethod-> setAccessible-> invoke : 1
+loadClass-> getConstructor-> newInstance-> getDeclaredMethod-> invoke-> getField-> set : 1
+getField-> get-> forName-> getInt-> getMethod-> invoke : 1
+getModifiers-> getName-> getDeclaringClass-> getReturnType : 1
+setAccessible-> get-> getName : 1
+isSynthetic-> getModifiers-> getDeclaringClass-> getName-> getParameterTypes-> getReturnType : 1
+getDeclaredMethods-> getName-> getDeclaredAnnotations-> getParameterAnnotations : 1
+getDeclaredField-> setAccessible-> get-> getInt-> setInt : 1
+get-> getFloat-> getBoolean-> getMethod-> invoke : 1
+getMethods-> getName-> getParameterTypes-> invoke : 1
+getFields-> getModifiers-> get-> getName-> getType : 1
+getReturnType-> getAnnotation-> getParameterTypes-> getGenericParameterTypes-> getParameterAnnotations : 1
+getMethods-> getAnnotation-> getParameterTypes-> setAccessible : 1
+getParameterTypes-> getName-> getReturnType : 1
+getDeclaredFields-> isAccessible-> getName-> setAccessible : 1
+loadClass-> getDeclaredField-> get : 1
+getDeclaredMethods-> getName-> getDeclaredAnnotations : 1
+getDeclaredField-> setAccessible-> getType-> getName : 1
+getDeclaredFields-> isAnnotationPresent-> getType-> getAnnotation : 1
+getDeclaredFields-> getAnnotation-> getModifiers-> getName : 1
+getDeclaredField-> forName-> getDeclaredMethods-> getName-> getGenericParameterTypes-> invoke-> setAccessible-> set : 1
+getEnclosingMethod-> getEnclosingConstructor-> getName-> getName : 1
+loadClass-> loadClass-> loadClass : 1
+getParameterTypes-> getGenericParameterTypes-> getParameterAnnotations : 1
+forName-> setAccessible-> get-> set : 1
+getDeclaredMethod-> invoke-> getDeclaredConstructor-> newInstance : 1
+getFields-> getAnnotation-> get-> getType-> getName : 1
+getDeclaredFields-> getModifiers-> setAccessible-> get-> getName-> set : 1
+getModifiers-> getDeclaringClass-> getName-> getReturnType-> getParameterTypes : 1
+getModifiers-> getName-> getType-> getGenericType : 1
+getName-> getParameterTypes-> isSynthetic : 1
+getMethods-> getDeclaringClass-> getFields-> getDeclaringClass-> getName-> getParameterTypes-> getDeclaredMethod-> getName-> set : 1
+getFields-> getModifiers-> getType-> getAnnotation-> getName : 1
+setAccessible-> setAccessible-> get-> setAccessible-> get : 1
+setAccessible-> set-> getName : 1
+getDeclaredMethods-> getName-> forName-> getConstructor-> newInstance-> invoke : 1
+getModifiers-> isSynthetic-> getParameterTypes-> getName-> toGenericString : 1
+forName-> getDeclaredField-> get-> setAccessible : 1
+get-> getChar-> getMethod-> invoke-> getInt-> getFloat : 1
+forName-> getDeclaredField-> get-> getDeclaredMethod-> setAccessible : 1
+newInstance-> getAnnotation-> getName-> getType-> getGenericType : 1
+forName-> getConstructor-> newInstance-> getMethod-> forName : 1
+newInstance-> getConstructor-> newInstance : 1
+setAccessible-> get-> get-> get : 1
+forName-> getField-> getInt-> getDeclaredField-> setAccessible-> set : 1
+getDeclaredFields-> getType-> setAccessible-> get-> setAccessible : 1
+getFields-> setAccessible-> get-> set : 1
+getDeclaredFields-> getName-> getInt : 1
+isAnnotationPresent-> getAnnotation-> getName : 1
+getName-> getAnnotations-> isAnnotationPresent : 1
+forName-> getFields-> getName-> getModifiers-> getInt : 1
+getConstructors-> getDeclaredMethods-> getDeclaredFields : 1
+newInstance-> getDeclaredFields-> getName-> setAccessible-> getType-> set : 1
+getDeclaredFields-> getName-> setAccessible-> get-> forName-> getMethod-> invoke : 1
+forName-> getMethod-> invoke-> getDeclaredField-> setAccessible-> set : 1
+forName-> getDeclaredField-> get-> getInt : 1
+isAnnotationPresent-> getName-> setAccessible : 1
+getDeclaredField-> setAccessible-> get-> getDeclaredFields-> getType-> getBoolean : 1
+getDeclaredMethods-> getName-> getParameterTypes-> getReturnType : 1
+forName-> getMethod-> invoke-> getField-> setAccessible-> getBoolean : 1
+forName-> getField-> getMethod-> invoke-> newInstance-> getInt : 1
+getMethods-> isAnnotationPresent-> getAnnotation-> getName-> getDeclaringClass-> getParameterTypes-> getDeclaredMethod-> getReturnType-> getGenericReturnType : 1
+forName-> getField-> getMethod-> newInstance-> invoke-> getInt : 1
+getMethods-> getName-> getDeclaredMethod-> setAccessible-> invoke : 1
+forName-> getDeclaredField-> setAccessible-> get-> getDeclaredMethod-> setAccessible : 1
+getDeclaredFields-> getName-> setAccessible-> get-> getType : 1
+getDeclaredFields-> getType-> isAnnotationPresent-> getAnnotation-> getDeclaredMethods-> getModifiers : 1
+getDeclaredMethod-> getMethod-> getReturnType-> getMethods-> getDeclaredMethods-> getName-> getParameterTypes : 1
+getDeclaredField-> setAccessible-> getInt-> setInt : 1
+forName-> getMethod-> getModifiers-> invoke : 1
+getDeclaredFields-> getModifiers-> getType-> get : 1
+getMethods-> getReturnType-> getParameterTypes : 1
+forName-> getDeclaredMethod-> setAccessible-> invoke-> getDeclaredField-> setAccessible-> set : 1
+forName-> getField-> getInt-> get-> getMethod-> invoke : 1
+getDeclaredFields-> getName-> set-> get : 1
+getDeclaredFields-> getType-> getGenericType-> setAccessible-> get : 1
+getDeclaredMethod-> getDeclaredField-> setAccessible : 1
+forName-> getConstructor-> newInstance-> getMethod-> getField-> get-> invoke : 1
+newInstance-> getDeclaredFields-> getName-> set : 1
+forName-> getConstructor-> setAccessible-> newInstance : 1
+getDeclaredMethods-> getAnnotation-> getGenericReturnType-> getName-> getAnnotations : 1
+getDeclaredField-> setAccessible-> getType : 1
+forName-> getConstructor-> getMethod-> newInstance-> invoke : 1
+getDeclaredFields-> isAnnotationPresent-> getAnnotation-> get : 1
+getDeclaredField-> getField-> getInt-> setInt : 1
+getDeclaredField-> setAccessible-> set-> getDeclaredMethod-> setAccessible-> invoke : 1
+getDeclaredFields-> setAccessible-> get-> get-> get-> getType-> get-> get : 1
+getFields-> getField-> getName-> get : 1
+forName-> newInstance-> getDeclaredMethod-> invoke : 1
+getDeclaredField-> setAccessible-> getInt-> get-> set-> isAccessible : 1
+get-> getLong-> getInt : 1
+getDeclaredMethods-> getAnnotation-> invoke-> getReturnType-> getName : 1
+getMethod-> invoke-> forName : 1
+getDeclaredField-> setAccessible-> set-> get : 1
+getDeclaredMethod-> setAccessible-> invoke-> getDeclaredField-> setAccessible-> get : 1
+getDeclaredFields-> getType-> getName-> setAccessible : 1
+setAccessible-> setAccessible-> invoke-> get : 1
+getDeclaredFields-> getFields-> setAccessible-> getType-> get-> get-> get-> get-> get-> get : 1
+getDeclaredMethods-> getMethods-> getReturnType : 1
+getDeclaredMethods-> isAnnotationPresent-> getName : 1
+newInstance-> getDeclaredFields-> getName-> setAccessible-> set : 1
+getMethod-> invoke-> get : 1
+loadClass-> get-> set : 1
+setAccessible-> getType-> getName-> set-> getMethod-> invoke : 1
+getDeclaredConstructors-> getParameterTypes-> isAccessible-> setAccessible-> newInstance : 1
+getFields-> getInt-> getName : 1
+getDeclaredField-> setAccessible-> get-> forName-> set : 1
+setAccessible-> getType-> get-> get-> get-> set-> get-> get-> get : 1
+forName-> getConstructor-> newInstance-> getDeclaredMethod-> invoke : 1
+getFields-> getType-> getName-> getBoolean : 1
+getDeclaredFields-> isAnnotationPresent-> getAnnotation-> getModifiers-> get-> getDeclaredMethods-> isAnnotationPresent-> getAnnotation : 1
+getAnnotation-> getName-> forName-> getDeclaredFields-> getInt : 1
+getDeclaredFields-> getInt-> getName : 1
+getDeclaredMethods-> getName-> getParameterTypes-> invoke-> getReturnType : 1
+getName-> getType-> setAccessible-> setBoolean-> setByte-> setDouble-> setFloat-> setInt-> setLong-> setShort-> setChar-> set : 1
+forName-> getMethod-> invoke-> getDeclaredField-> setAccessible-> set-> getDeclaredMethod-> get-> setAccessible : 1
+getMethod-> getField-> getInt : 1
+getDeclaredFields-> getModifiers-> isAnnotationPresent-> setAccessible : 1
+forName-> getDeclaredFields-> getName-> get : 1
+getField-> getType-> getName-> set : 1
+forName-> getDeclaredField-> getField-> getInt-> setInt : 1
+getDeclaredFields-> setAccessible-> getType-> getName-> get : 1
+getField-> getInt-> get-> getFloat : 1
+getName-> getType-> newInstance-> getGenericType : 1
+forName-> getField-> getInt-> getMethod-> invoke : 1
+getDeclaredMethods-> isAnnotationPresent-> getName-> getAnnotation-> getParameterTypes-> getDeclaredMethod-> getReturnType-> getGenericReturnType : 1
+getDeclaredField-> setAccessible-> get-> getDeclaredMethod : 1
+forName-> getDeclaredFields-> getInt-> getName-> getDeclaredField : 1
+getFields-> getName-> getType-> get-> getInt-> getFloat-> getDouble-> getLong-> getBoolean : 1
+loadClassViaClasses-> loadClassViaContext-> forName : 1
+getDeclaredConstructors-> isAnnotationPresent-> getParameterTypes : 1
+getDeclaredFields-> getType-> setAccessible : 1
+getName-> forName-> getConstructor-> newInstance-> getMethod-> invoke : 1
+getDeclaredMethods-> getDeclaredFields-> getModifiers-> getName-> getParameterTypes-> getReturnType-> getModifiers-> getName-> getType : 1
+setAccessible-> getType-> getName-> get : 1
+getDeclaredConstructors-> getParameterTypes-> isAccessible-> getParameterAnnotations-> newInstance-> setAccessible : 1
