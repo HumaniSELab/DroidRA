@@ -120,6 +120,8 @@ public class Main
 		long afterDummyMain = System.currentTimeMillis();
 		System.out.println("==>afterDummyMain TIME:" + afterDummyMain);
 
+
+		System.out.println("Start Reflection Analysis. This is time-consuming, please wait!" );
 		reflectionAnalysis();
 		toJson();
 

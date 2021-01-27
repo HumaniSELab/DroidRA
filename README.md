@@ -47,3 +47,6 @@ mvn clean install
 ~/your_apk_path.apk
 ~/android-platforms/android-17/android.jar
 false
+
+## Output
+Refer to refl.json to check the reflection calls 
