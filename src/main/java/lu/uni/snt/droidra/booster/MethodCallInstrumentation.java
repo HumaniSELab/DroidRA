@@ -163,12 +163,7 @@ public class MethodCallInstrumentation extends DefaultInstrumentation
 
 		System.out.println(body);
 
-		System.out.println("sunxiaoyu");
 		for(Local local : body.getLocals()){
-			if(local.getName().equals("$r7")){
-				System.out.println("====$r7:"+local.getType().toString());
-			}
-			System.out.println(local.getType().toString());
 			if(local.getType().toString().equals("null_type")){
 				local.setType(RefType.v("java.lang.Object"));
 			}
