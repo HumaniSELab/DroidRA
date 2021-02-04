@@ -110,13 +110,13 @@ public class SootStmtRef {
                 for (Iterator<SootClass> iter = applicationClasses.snapshotIterator(); iter.hasNext();) {
                     SootClass sootClass = iter.next();
 
-                    if(!ApplicationClassFilter.isApplicationClass(sootClass)){
-                        continue;
-                    }
-
-                    if(!sootClass.isConcrete()){
-                        continue;
-                    }
+//                    if(!ApplicationClassFilter.isApplicationClass(sootClass)){
+//                        continue;
+//                    }
+//
+//                    if(!sootClass.isConcrete()){
+//                        continue;
+//                    }
 
                     sootClass.getFields().stream().forEach(sootField -> {
                         convertToClassNameFieldTypesMap(sootClass.getName(), sootField);
