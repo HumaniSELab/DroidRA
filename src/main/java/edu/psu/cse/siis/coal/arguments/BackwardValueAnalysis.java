@@ -34,6 +34,7 @@ import soot.jimple.AssignStmt;
 import soot.jimple.DefinitionStmt;
 import soot.jimple.IdentityStmt;
 import soot.jimple.internal.JInstanceFieldRef;
+import soot.jimple.internal.JVirtualInvokeExpr;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.scalar.Pair;
 import edu.psu.cse.siis.coal.AnalysisParameters;
@@ -47,7 +48,6 @@ public abstract class BackwardValueAnalysis extends ArgumentValueAnalysis {
   /**
    * Returns all assignments for a local variable. This walks the interprocedural control flow graph
    * back from a statement looking for all assignments to a given local variable.
-   * 
    * @param start The statement where the analysis should start.
    * @param local The local variable whose assignments should be found.
    * @param init A boolean that indicates whether the analysis should be initialized. This should

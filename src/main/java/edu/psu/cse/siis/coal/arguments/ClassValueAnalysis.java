@@ -19,8 +19,10 @@
 package edu.psu.cse.siis.coal.arguments;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import lu.uni.snt.droidra.util.ApplicationClassFilter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +50,7 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
 
   /**
    * Returns the set of possible values of a variable of type class.
-   * 
+   *
    * @param value The variable whose value we are looking for.
    * @param start The statement where the analysis should start.
    * @return The set of possible values for the variable.
@@ -93,7 +95,7 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
 
   /**
    * Processes assignment to local variables that have a class type.
-   * 
+   *
    * @param assignStmts A list of assignment statements to a given local variable.
    * @param visitedStmts The set of statements visited by the analysis.
    * @return The set of possible value given by the assignment statements.
@@ -205,7 +207,7 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
 
   /**
    * Returns the variable values that are associated with an call statement.
-   * 
+   *
    * @param sourceStmt The statement at which we should start.
    * @param visitedStmts The set of visited statements.
    * @return The set of possible values.
@@ -253,10 +255,4 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
 
     return result;
   }
-
-  @Override
-  public Object getTopValue() {
-    return TOP_VALUE;
-  }
-
 }

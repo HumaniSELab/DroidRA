@@ -51,7 +51,8 @@ public class ApkBooster extends SceneTransformer
 			"-keep-line-number",
 			"-allow-phantom-refs",
 			"-w",
-			"-p", "cg", "enabled:true"
+			"-p", "cg", "enabled:true",
+			"-process-multiple-dex"
         };
 			
 		if (input.endsWith(".apk"))
@@ -59,11 +60,15 @@ public class ApkBooster extends SceneTransformer
 			Options.v().set_force_android_jar(clsPath);
 			Options.v().set_src_prec(Options.src_prec_apk);
 			Options.v().set_output_format(Options.output_format_dex);
+			Options.v().set_process_multiple_dex(true);
+			Options.v().set_search_dex_in_archives(true);
 		}
 		else
 		{
 			Options.v().set_src_prec(Options.src_prec_class);
 			Options.v().set_output_format(Options.output_format_jimple);
+			Options.v().set_process_multiple_dex(true);
+			Options.v().set_search_dex_in_archives(true);
 		}
 		
 		PackManager.v().getPack("wjtp").add(new Transform("wjtp.ApkBooster", new ApkBooster()));

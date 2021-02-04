@@ -50,7 +50,7 @@ public class ClassNewInstanceCallInstrumentation extends DefaultInstrumentation
 		//for (ClassDescription clsDesc : stmtValue.getClsSet())
 		//{
 		ClassDescription clsDesc = stmtValue.getClsDesc();
-			SootClass sc = Scene.v().getSootClass(clsDesc.name);
+			SootClass sc = Scene.v().getSootClass(clsDesc.name.replaceAll(";", ""));
 			
 
 			Local local = localGenerator.generateLocal(sc.getType());

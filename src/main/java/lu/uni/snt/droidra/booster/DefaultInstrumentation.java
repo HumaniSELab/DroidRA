@@ -85,8 +85,8 @@ public abstract class DefaultInstrumentation implements IInstrumentation
 		else if (1 < targetMethodList.size())
 		{
 			//Get all its possible arrays
-			ArrayVarValue[] arrayVarValues = GlobalRef.arrayTypeRef.get(uniqStmt);
-			
+			ArrayVarValue[] arrayVarValues = null;
+
 			if (null == arrayVarValues)
 			{
 				//TODO: Come back later...
@@ -102,7 +102,7 @@ public abstract class DefaultInstrumentation implements IInstrumentation
 			else
 			{
 				ArrayVarValue avValue = arrayVarValues[0];
-				
+
 				if (null != avValue)
 				{
 					//First check the length of parameters
@@ -114,17 +114,17 @@ public abstract class DefaultInstrumentation implements IInstrumentation
 							methodsWithSameParamLength.add(sootMethod);
 						}
 					}
-					
+
 					if (1 == methodsWithSameParamLength.size())
 					{
-						targetMethod = methodsWithSameParamLength.get(0); 
+						targetMethod = methodsWithSameParamLength.get(0);
 					}
 					if (1 < methodsWithSameParamLength.size())
 					{
 						//more than one methods, perform more fine-grained analysis
 						int matchScore = 0;
 						SootMethod matchMethod = null;
-						
+
 						for (SootMethod sm : methodsWithSameParamLength)
 						{
 							List<Type> types = sm.getParameterTypes();
@@ -138,11 +138,11 @@ public abstract class DefaultInstrumentation implements IInstrumentation
 										matchMethod = sm;
 										break;
 									}
-									
+
 								}
 							}
 						}
-						
+
 						targetMethod = matchMethod;
 					}
 					else

@@ -13,6 +13,7 @@ import lu.uni.snt.droidra.model.UniqStmt;
 import lu.uni.snt.droidra.retarget.DummyMainGenerator;
 import lu.uni.snt.droidra.retarget.RetargetWithDummyMainGenerator;
 import lu.uni.snt.droidra.retarget.SootSetup;
+import lu.uni.snt.droidra.typeref.ArrayVarItemTypeRef;
 import lu.uni.snt.droidra.typeref.soot.SootStmtRef;
 import lu.uni.snt.droidra.util.ApplicationClassFilter;
 import org.apache.commons.collections4.CollectionUtils;
@@ -107,11 +108,11 @@ public class Main
 		String apkPath = args[0];
 		String forceAndroidJar = args[1];
 		String incrementalAnalysisSwitchOn = args[2];
-		String[] simiDroidArgs = simiDroidAnalysis(args, forceAndroidJar, incrementalAnalysisSwitchOn);
+		//String[] simiDroidArgs = simiDroidAnalysis(args, forceAndroidJar, incrementalAnalysisSwitchOn);
 
 		//calculate EntryPoint to generate dummyMainMethod
 		try {
-			calculateEntryPoint(apkPath, forceAndroidJar, incrementalAnalysisSwitchOn, simiDroidArgs);
+			calculateEntryPoint(apkPath, forceAndroidJar, incrementalAnalysisSwitchOn);
 		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
 			System.out.println("==>calculateEntryPoint error:" + e);
@@ -120,19 +121,18 @@ public class Main
 		long afterDummyMain = System.currentTimeMillis();
 		System.out.println("==>afterDummyMain TIME:" + afterDummyMain);
 
-
 		System.out.println("Start Reflection Analysis. This is time-consuming, please wait!" );
 		reflectionAnalysis();
 		toJson();
 
 		long afterRA = System.currentTimeMillis();
 		System.out.println("==>afterRA TIME:" + afterRA);
-		
+
 		booster();
-		
+
 		long afterBooster = System.currentTimeMillis();
 		System.out.println("==>afterBooster TIME:" + afterBooster);
-		
+
 		System.out.println("====>TIME_TOTAL:" + startTime + "," + afterDummyMain + "," + afterRA + "," + afterBooster);
 	}
 
@@ -164,7 +164,7 @@ public class Main
 	/**
 	 * calculate Entry Point in the given APK file.
 	 */
-	public static void calculateEntryPoint(String apkPath, String forceAndroidJar, String incrementalAnalysisSwitchOn, String[] simiDroidArgs) throws IOException, XmlPullParserException {
+	public static void calculateEntryPoint(String apkPath, String forceAndroidJar, String incrementalAnalysisSwitchOn) throws IOException, XmlPullParserException {
 		DummyMainGenerator dummyMainGenerator = new DummyMainGenerator(apkPath);
 		InfoflowAndroidConfiguration config = dummyMainGenerator.config;
 		// sunxiaobiu: 14/10/19 you can modify your own config by changing "config" parameters
@@ -233,21 +233,23 @@ public class Main
 			boolean flag = true;
 
 			entrypoint.getMethods().forEach(sootMethod -> {
-				Body body = sootMethod.retrieveActiveBody();
+				if(sootMethod.hasActiveBody()){
+					Body body = sootMethod.retrieveActiveBody();
 
-				PatchingChain<Unit> units = body.getUnits();
+					PatchingChain<Unit> units = body.getUnits();
 
-				for (Iterator<Unit> iterU = units.snapshotIterator(); iterU.hasNext(); )
-				{
-					Stmt stmt = (Stmt) iterU.next();
+					for (Iterator<Unit> iterU = units.snapshotIterator(); iterU.hasNext(); )
+					{
+						Stmt stmt = (Stmt) iterU.next();
 
-					if (stmt.containsInvokeExpr()){
-						methodInvokeChain.add(stmt.getInvokeExpr().getMethodRef().getSignature());
-						Iterator<Edge> edgeIt = Scene.v().getCallGraph().edgesOutOf(stmt);
-						while (edgeIt.hasNext()) {
-							Edge edge = edgeIt.next();
-							String targetMethodDeclaringClass = edge.getTgt().method().getSignature();
-							methodInvokeChain.add(targetMethodDeclaringClass);
+						if (stmt.containsInvokeExpr()){
+							methodInvokeChain.add(stmt.getInvokeExpr().getMethodRef().getSignature());
+							Iterator<Edge> edgeIt = Scene.v().getCallGraph().edgesOutOf(stmt);
+							while (edgeIt.hasNext()) {
+								Edge edge = edgeIt.next();
+								String targetMethodDeclaringClass = edge.getTgt().method().getSignature();
+								methodInvokeChain.add(targetMethodDeclaringClass);
+							}
 						}
 					}
 				}
@@ -409,6 +411,7 @@ public class Main
 //		GlobalRef.arrayTypeRef = ArrayVarItemTypeRef.arrayTypeRef;
 
 		SootStmtRef.setup(GlobalRef.apkPath, GlobalRef.clsPath);
+		System.out.println("after setup");
 		GlobalRef.classParamTypesKeyMethodValueMap = SootStmtRef.classParamTypesKeyMethodValueMap;
 		GlobalRef.nameParamTypesKeyClassValueMap = SootStmtRef.nameParamTypesKeyClassValueMap;
 		GlobalRef.classMethodParamTypesKeyStringMap = SootStmtRef.classMethodParamTypesKeyStringMap;

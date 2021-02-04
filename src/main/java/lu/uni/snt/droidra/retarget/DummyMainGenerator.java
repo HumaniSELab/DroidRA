@@ -810,15 +810,17 @@ public class DummyMainGenerator extends SceneTransformer {
 			throw new RuntimeException(String.valueOf(methodName) + " is not belong to class " + currentClass.getName());
 		}
 
-		List<SootClass> extendedClasses = Scene.v().getActiveHierarchy().getSuperclassesOf(currentClass);
-		for (SootClass sc : extendedClasses) {
+		if(!currentClass.isInterface()){
+			List<SootClass> extendedClasses = Scene.v().getActiveHierarchy().getSuperclassesOf(currentClass);
+			for (SootClass sc : extendedClasses) {
 
-			List<SootMethod> methods = sc.getMethods();
-			for (SootMethod method : methods) {
+				List<SootMethod> methods = sc.getMethods();
+				for (SootMethod method : methods) {
 
-				if (method.getName().equals(methodName))
-				{
-					return true;
+					if (method.getName().equals(methodName))
+					{
+						return true;
+					}
 				}
 			}
 		}

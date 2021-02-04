@@ -140,41 +140,45 @@ public class ReflectionProfile
 	 */
 	private static boolean exist(String clsName, String fieldOrMethodName, int type)
 	{
-		
-		if (! Scene.v().containsClass(clsName))
-		{
-			return false;
-		}
-		
-		if (1 != type)
-		{
-			SootClass sc = Scene.v().getSootClass(clsName);
-			
-			try
+
+		try {
+			if (! Scene.v().containsClass(clsName))
 			{
-				Object obj = null;
-				
-				if (3 == type)
+				return false;
+			}
+
+			if (1 != type)
+			{
+				SootClass sc = Scene.v().getSootClass(clsName);
+
+				try
 				{
-					obj = sc.getFieldByName(fieldOrMethodName);
+					Object obj = null;
+
+					if (3 == type)
+					{
+						obj = sc.getFieldByName(fieldOrMethodName);
+					}
+					else if (2 == type)   //Method
+					{
+						obj = sc.getMethodByName(fieldOrMethodName);
+					}
+
+					if (null == obj)
+					{
+						return false;
+					}
 				}
-				else if (2 == type)   //Method
-				{
-					obj = sc.getMethodByName(fieldOrMethodName);
-				}
-				
-				if (null == obj)
+				catch (Exception ex)
 				{
 					return false;
 				}
 			}
-			catch (Exception ex)
-			{
-				return false;
-			}
+
+			return true;
+		} catch (Exception e) {
+			return false;
 		}
-		
-		return true;
 	}
 	
 	private static RClass getRClass(Map<String, RClass> rClasses, String clsName)

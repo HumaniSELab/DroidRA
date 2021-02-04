@@ -26,6 +26,8 @@ public class ApplicationClassFilter {
         if (clsName.startsWith("com.google.")
                 || clsName.startsWith("soot.")
                 || clsName.startsWith("android.")
+                || clsName.startsWith("com.android.")
+                || clsName.startsWith("androidx.")
                 || clsName.startsWith("java.")
                 || clsName.startsWith("com.facebook.")
                 || clsName.startsWith("org.apache.")
@@ -35,4 +37,9 @@ public class ApplicationClassFilter {
         return true;
     }
 
+    public static boolean isAndroidSystemAPI(String className) {
+        return className.startsWith("<android.")
+                || className.startsWith("<com.android.")
+                || className.startsWith("<androidx.");
+    }
 }

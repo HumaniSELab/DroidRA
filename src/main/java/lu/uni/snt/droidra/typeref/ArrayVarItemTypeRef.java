@@ -88,7 +88,6 @@ public class ArrayVarItemTypeRef
 			  "-p", "cg", "enabled:false",
 			  "-p", "jop.cpf", "enabled:true"
         };
-
 		G.reset();
 
 		if (input.endsWith(".apk"))
@@ -263,7 +262,6 @@ public class ArrayVarItemTypeRef
 				}
 
 			}
-        	
         }));
 
         soot.Main.main(args);

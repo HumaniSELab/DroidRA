@@ -51,7 +51,7 @@ public class Mocker {
 		}
 		else
 		{
-			sc = new SootClass(clsName);
+			sc = new SootClass(clsName.replaceAll(";", ""));
 			sc.setSuperclass(Scene.v().getSootClass("java.lang.Object"));
 			
 			//sc.setPhantom(false);

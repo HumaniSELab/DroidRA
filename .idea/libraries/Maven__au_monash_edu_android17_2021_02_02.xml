@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: au.monash.edu:android17:2021-02-02">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/au/monash/edu/android17/2021-02-02/android17-2021-02-02.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/au/monash/edu/android17/2021-02-02/android17-2021-02-02-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/au/monash/edu/android17/2021-02-02/android17-2021-02-02-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

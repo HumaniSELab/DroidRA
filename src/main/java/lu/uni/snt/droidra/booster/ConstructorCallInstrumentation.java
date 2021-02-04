@@ -64,10 +64,10 @@ public class ConstructorCallInstrumentation extends DefaultInstrumentation
 		//for (ClassDescription clsDesc : stmtValue.getClsSet())
 		//{
 		ClassDescription clsDesc = stmtValue.getClsDesc();
-			SootClass sc = Scene.v().getSootClass(clsDesc.cls);
+			SootClass sc = Scene.v().getSootClass(clsDesc.cls.replaceAll(";",""));
 			
 
-			Local local = localGenerator.generateLocal(RefType.v(clsDesc.cls));
+			Local local = localGenerator.generateLocal(RefType.v(clsDesc.cls.replaceAll(";","")));
 			
 			Unit newU = Jimple.v().newAssignStmt(local, Jimple.v().newNewExpr(sc.getType()));
 			injectedUnits.add(newU);

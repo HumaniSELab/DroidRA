@@ -8,16 +8,8 @@ import lu.uni.snt.droidra.model.SimpleStmtValue;
 import lu.uni.snt.droidra.model.StmtKey;
 import lu.uni.snt.droidra.model.StmtType;
 import lu.uni.snt.droidra.model.UniqStmt;
-import soot.ArrayType;
-import soot.Body;
-import soot.Local;
-import soot.RefType;
-import soot.Scene;
-import soot.SootClass;
-import soot.SootMethod;
-import soot.Type;
-import soot.Unit;
-import soot.Value;
+import org.apache.commons.collections4.CollectionUtils;
+import soot.*;
 import soot.javaToJimple.LocalGenerator;
 import soot.jimple.AssignStmt;
 import soot.jimple.IntConstant;
@@ -131,14 +123,19 @@ public class MethodCallInstrumentation extends DefaultInstrumentation
 					body.getUnits().insertBefore(assignU, stmt);
 					//injectedUnits.add(assignU);
 					
-					if (isInterfaceType(arg0Local))
+					if (isInterfaceType(arg0Local) && (calleeMethod.makeRef().declaringClass().isInterface() || calleeMethod.makeRef().declaringClass().isPhantom()))
 					{
 						invokeExpr = Jimple.v().newInterfaceInvokeExpr(arg0Local, calleeMethod.makeRef(), args);
 					}
 					else
 					{
 						System.out.println(calleeMethod.isStatic());
-						invokeExpr = Jimple.v().newVirtualInvokeExpr(arg0Local, calleeMethod.makeRef(), args);
+
+						if(args.size() == 1 && args.get(0).toString().equals("null")){
+							invokeExpr = Jimple.v().newVirtualInvokeExpr(arg0Local, calleeMethod.makeRef());
+						}else{
+							invokeExpr = Jimple.v().newVirtualInvokeExpr(arg0Local, calleeMethod.makeRef(), args);
+						}
 					}
 				}
 				
@@ -163,10 +160,20 @@ public class MethodCallInstrumentation extends DefaultInstrumentation
 		}
 		
 		injectedStmtWrapper(body, localGenerator, stmt, nextStmt);
-		
+
 		System.out.println(body);
+
+		System.out.println("sunxiaoyu");
+		for(Local local : body.getLocals()){
+			if(local.getName().equals("$r7")){
+				System.out.println("====$r7:"+local.getType().toString());
+			}
+			System.out.println(local.getType().toString());
+			if(local.getType().toString().equals("null_type")){
+				local.setType(RefType.v("java.lang.Object"));
+			}
+		}
 		body.validate();
-		
 	}
 	
 	public boolean isInterfaceType(Value value)
