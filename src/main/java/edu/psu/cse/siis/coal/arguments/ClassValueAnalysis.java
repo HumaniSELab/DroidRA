@@ -48,6 +48,11 @@ public class ClassValueAnalysis extends BackwardValueAnalysis {
     return new HashSet<Object>(Arrays.asList(inlineValues));
   }
 
+  @Override
+  public Object getTopValue() {
+    return null;
+  }
+
   /**
    * Returns the set of possible values of a variable of type class.
    *
