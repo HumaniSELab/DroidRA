@@ -80,13 +80,13 @@ public class SootStmtRef {
                 for (Iterator<SootClass> iter = applicationClasses.snapshotIterator(); iter.hasNext();) {
                     SootClass sootClass = iter.next();
 
-                    if(!ApplicationClassFilter.isApplicationClass(sootClass)){
-                        continue;
-                    }
-
-                    if(!sootClass.isConcrete()){
-                        continue;
-                    }
+//                    if(!ApplicationClassFilter.isApplicationClass(sootClass)){
+//                        continue;
+//                    }
+//
+//                    if(!sootClass.isConcrete()){
+//                        continue;
+//                    }
 
                     List<SootMethod> methodCopyList = new ArrayList<>(sootClass.getMethods());
                     methodCopyList.stream().filter(methodCopy -> {
